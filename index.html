@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Econiq">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Econiq</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede6;
+    --text2: #888;
+    --text3: #555;
+    --accent: #c8f55a;
+    --accent-dim: rgba(200,245,90,0.12);
+    --red: #ff6b6b;
+    --amber: #f5a623;
+    --green: #c8f55a;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --r: 14px;
+    --r-lg: 20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; }
+
+  /* SCREENS */
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .screen.active { opacity: 1; pointer-events: all; }
+
+  /* HOME SCREEN */
+  #home { padding: 0; justify-content: space-between; }
+  .home-header { padding: 56px 28px 0; }
+  .logo { font-family: var(--serif); font-size: 36px; color: var(--text); letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .tagline { font-size: 13px; color: var(--text3); margin-top: 4px; font-weight: 300; letter-spacing: 0.3px; }
+
+  .stats-strip { display: flex; gap: 10px; padding: 32px 28px 0; }
+  .stat-box { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r); padding: 14px; }
+  .stat-box .val { font-family: var(--mono); font-size: 22px; font-weight: 500; color: var(--text); }
+  .stat-box .lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .topic-grid { padding: 28px 28px 0; }
+  .topic-grid-label { font-size: 11px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+  .topics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .topic-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r-lg); padding: 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; overflow: hidden; }
+  .topic-card:active { transform: scale(0.98); }
+  .topic-card.all { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; }
+  .topic-card .icon { font-size: 22px; margin-bottom: 10px; }
+  .topic-card.all .icon { margin: 0; }
+  .topic-card .name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .topic-card .count { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .topic-card.all .name { font-size: 16px; }
+  .topic-card .progress-dot { position: absolute; top: 14px; right: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0; }
+  .topic-card.has-progress .progress-dot { opacity: 1; }
+  .topic-card:hover, .topic-card:active { border-color: var(--border2); background: var(--surface2); }
+
+  .home-footer { padding: 20px 28px 40px; }
+  .streak-bar { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 40px; padding: 10px 16px; }
+  .streak-fire { font-size: 18px; }
+  .streak-text { font-size: 13px; color: var(--text2); flex: 1; }
+  .streak-text strong { color: var(--text); font-weight: 500; }
+  .xp-badge { font-family: var(--mono); font-size: 12px; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 20px; }
+
+  /* STUDY SCREEN */
+  #study { background: var(--bg); }
+  .study-header { display: flex; align-items: center; gap: 12px; padding: 56px 20px 16px; }
+  .back-btn { width: 36px; height: 36px; border-radius: 50%; border: 0.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; }
+  .back-btn:active { transform: scale(0.95); }
+  .progress-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s ease; }
+  .card-counter { font-family: var(--mono); font-size: 12px; color: var(--text3); white-space: nowrap; }
+
+  .card-area { flex: 1; padding: 8px 20px 0; display: flex; flex-direction: column; }
+  .topic-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 11px; color: var(--text3); margin-bottom: 16px; align-self: flex-start; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* CARD */
+  .card-scene { flex: 1; perspective: 1200px; margin-bottom: 16px; min-height: 0; }
+  .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; inset: 0; backface-visibility: hidden; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px 24px; text-align: center; }
+  .card-back { transform: rotateY(180deg); background: var(--surface2); justify-content: flex-start; padding-top: 32px; overflow-y: auto; }
+  .card-label { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
+  .card-q { font-family: var(--serif); font-size: 22px; line-height: 1.4; color: var(--text); font-style: italic; }
+  .card-a { font-size: 15px; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+  .card-hint { font-size: 12px; color: var(--text3); border-top: 0.5px solid var(--border); padding-top: 14px; width: 100%; text-align: center; font-style: italic; }
+  .tap-cue { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 4px; letter-spacing: 0.3px; }
+
+  /* GRAPH CARD */
+  .graph-container { width: 100%; margin-bottom: 16px; }
+  .graph-container svg { width: 100%; height: auto; }
+
+  /* RATING */
+  .rating-area { padding: 0 20px 40px; }
+  .rating-label { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .rating-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .r-btn { border: 0.5px solid var(--border); background: var(--surface); border-radius: var(--r); padding: 12px 6px; cursor: pointer; text-align: center; transition: all 0.15s; color: var(--text); font-family: var(--sans); }
+  .r-btn:active { transform: scale(0.97); }
+  .r-btn .r-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+  .r-btn .r-lbl { font-size: 12px; color: var(--text2); }
+  .r-btn.easy { border-color: rgba(200,245,90,0.3); }
+  .r-btn.easy:active { background: rgba(200,245,90,0.08); }
+  .r-btn.medium { border-color: rgba(245,166,35,0.3); }
+  .r-btn.medium:active { background: rgba(245,166,35,0.08); }
+  .r-btn.hard { border-color: rgba(255,107,107,0.3); }
+  .r-btn.hard:active { background: rgba(255,107,107,0.08); }
+  .hidden { display: none !important; }
+
+  /* DONE SCREEN */
+  #done { justify-content: center; align-items: center; padding: 28px; }
+  .done-icon { font-size: 56px; margin-bottom: 20px; }
+  .done-title { font-family: var(--serif); font-size: 32px; color: var(--text); margin-bottom: 8px; }
+  .done-sub { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.7; margin-bottom: 32px; max-width: 280px; }
+  .done-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 32px; }
+  .done-stat { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+  .done-stat .v { font-family: var(--mono); font-size: 28px; font-weight: 500; }
+  .done-stat .l { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .done-stat.g .v { color: var(--green); }
+  .done-stat.a .v { color: var(--amber); }
+  .done-stat.r .v { color: var(--red); }
+  .done-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .btn-primary { background: var(--accent); color: #0a0a0a; border: none; border-radius: var(--r); padding: 16px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: var(--sans); }
+  .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+  .btn-secondary { background: var(--surface); color: var(--text2); border: 0.5px solid var(--border); border-radius: var(--r); padding: 16px; font-size: 15px; cursor: pointer; font-family: var(--sans); }
+  .btn-secondary:active { transform: scale(0.98); }
+
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .screen.active .home-header, .screen.active .stats-strip, .screen.active .topic-grid, .screen.active .home-footer {
+    animation: slideUp 0.4s ease both;
+  }
+  .screen.active .stats-strip { animation-delay: 0.05s; }
+  .screen.active .topic-grid { animation-delay: 0.1s; }
+  .screen.active .home-footer { animation-delay: 0.15s; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active" id="home">
+  <div class="home-header">
+    <div class="logo">econ<span>iq</span></div>
+    <div class="tagline">15 minutes a day. Economics & maths.</div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-box"><div class="val" id="total-xp">0</div><div class="lbl">total xp</div></div>
+    <div class="stat-box"><div class="val" id="cards-done">0</div><div class="lbl">cards done</div></div>
+    <div class="stat-box"><div class="val" id="mastery-pct">0%</div><div class="lbl">mastery</div></div>
+  </div>
+
+  <div class="topic-grid">
+    <div class="topic-grid-label">choose a module</div>
+    <div class="topics">
+      <div class="topic-card all" onclick="startStudy('all')">
+        <div><div class="name">All topics</div><div class="count" id="count-all">0 cards</div></div>
+        <div class="icon">⚡</div>
+      </div>
+      <div class="topic-card" onclick="startStudy('macro')">
+        <div class="progress-dot"></div>
+        <div class="icon">📈</div>
+        <div class="name">Macro</div>
+        <div class="count" id="count-macro">0 cards</div>
+      </div>
+      <div class="topic-card" onclick="startStudy('micro')">
+        <div class="progress-dot"></div>
+        <div class="icon">🏪</div>
+        <div class="name">Micro</div>
+        <div class="count" id="count-micro">0 cards</div>
+      </div>
+      <div class="topic-card" onclick="startStudy('maths')">
+        <div class="progress-dot"></div>
+        <div class="icon">∂</div>
+        <div class="name">Maths</div>
+        <div class="count" id="count-maths">0 cards</div>
+      </div>
+      <div class="topic-card" onclick="startStudy('finance')">
+        <div class="progress-dot"></div>
+        <div class="icon">💹</div>
+        <div class="name">Finance</div>
+        <div class="count" id="count-finance">0 cards</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-footer">
+    <div class="streak-bar">
+      <span class="streak-fire">🔥</span>
+      <span class="streak-text"><strong id="streak-num">0</strong> day streak</span>
+      <span class="xp-badge" id="xp-badge">0 XP</span>
+    </div>
+  </div>
+</div>
+
+<!-- STUDY -->
+<div class="screen" id="study">
+  <div class="study-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="card-counter" id="card-counter">0/0</div>
+  </div>
+
+  <div class="card-area">
+    <div class="topic-badge" id="study-badge">macro</div>
+    <div class="card-scene" id="card-scene" onclick="flipCard()">
+      <div class="card-inner" id="card-inner">
+        <div class="card-face card-front" id="card-front">
+          <div class="card-label">question</div>
+          <div class="card-q" id="card-q">...</div>
+        </div>
+        <div class="card-face card-back" id="card-back">
+          <div class="card-label">answer</div>
+          <div id="card-back-content"></div>
+          <div class="card-hint" id="card-hint-el"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tap-cue" id="tap-cue">tap to reveal</div>
+  </div>
+
+  <div class="rating-area">
+    <div class="rating-label hidden" id="rating-label">how did you do?</div>
+    <div class="rating-btns hidden" id="rating-btns">
+      <button class="r-btn hard" onclick="rate('hard')"><span class="r-icon">😓</span><span class="r-lbl">Again</span></button>
+      <button class="r-btn medium" onclick="rate('medium')"><span class="r-icon">🤔</span><span class="r-lbl">Almost</span></button>
+      <button class="r-btn easy" onclick="rate('easy')"><span class="r-icon">✓</span><span class="r-lbl">Got it</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- DONE -->
+<div class="screen" id="done">
+  <div class="done-icon">🎯</div>
+  <div class="done-title">Session done.</div>
+  <div class="done-sub" id="done-sub">You completed a session.</div>
+  <div class="done-stats">
+    <div class="done-stat g"><div class="v" id="d-got">0</div><div class="l">got it</div></div>
+    <div class="done-stat a"><div class="v" id="d-almost">0</div><div class="l">almost</div></div>
+    <div class="done-stat r"><div class="v" id="d-hard">0</div><div class="l">again</div></div>
+  </div>
+  <div class="done-btns">
+    <button class="btn-primary" onclick="restartSession()">Go again</button>
+    <button class="btn-secondary" onclick="goHome()">Back to home</button>
+  </div>
+</div>
+
+<script>
+const CARDS = [
+  // MACRO
+  { topic:'macro', type:'text', q:'Where does long-run equilibrium occur, and why is it stable?', a:'At the intersection of AD and LRAS. It\'s stable because LRAS is fixed at potential output — the economy self-corrects back here via wage and price adjustment over time.', hint:'SRAS shifts until it meets LRAS' },
+  { topic:'macro', type:'text', q:'What shifts the LRAS curve rightward?', a:'Improvements in productive capacity: better technology, larger labour force, more capital stock, stronger institutions. Price level and demand changes do NOT shift LRAS.', hint:'Supply-side only — think long-run growth' },
+  { topic:'macro', type:'graph', graphType:'ad-as', q:'In this AD-AS diagram, the economy is at point A. What happens if aggregate demand falls?', a:'AD shifts left. In the short run, output falls below potential and price level drops — point B. In the long run, wages fall, SRAS shifts right, returning to potential output at a lower price level.', hint:'Short run: below LRAS. Long run: back to LRAS.' },
+  { topic:'macro', type:'text', q:'Why is the Phillips curve vertical in the long run?', a:'Workers and firms eventually adjust expectations to actual inflation, so unemployment always returns to the natural rate regardless of the inflation level chosen.', hint:'Expected inflation = actual inflation in LR' },
+  { topic:'macro', type:'text', q:'What is the Fisher effect?', a:'Nominal interest rate = real interest rate + expected inflation. In the long run, higher inflation raises nominal rates one-for-one, leaving real rates unchanged.', hint:'i = r + π' },
+  { topic:'macro', type:'text', q:'What causes crowding out in fiscal policy?', a:'Government borrowing raises interest rates, which reduces private investment. The fiscal stimulus is partially offset — the multiplier is dampened.', hint:'Higher r → lower I' },
+  { topic:'macro', type:'text', q:'What is the difference between cyclical and structural unemployment?', a:'Cyclical unemployment is demand-deficient — it rises when output falls below potential. Structural unemployment persists even at potential output due to skills mismatches.', hint:'Cyclical = short-run; structural = long-run' },
+
+  // MICRO
+  { topic:'micro', type:'text', q:'Why does a perfectly competitive firm produce where P = MC?', a:'If P > MC, producing one more unit adds more revenue than cost — profit rises. If P < MC, the unit destroys profit. Equilibrium: keep going until P = MC.', hint:'Think at the margin' },
+  { topic:'micro', type:'graph', graphType:'monopoly', q:'In this monopoly diagram, which area represents the deadweight loss?', a:'The triangle between the competitive quantity (where P=MC) and the monopoly quantity. The monopolist restricts output below the efficient level, creating welfare loss.', hint:'Deadweight loss = unrealised gains from trade' },
+  { topic:'micro', type:'text', q:'What is the condition for consumer optimum?', a:'Utility is maximised where MU₁/P₁ = MU₂/P₂ — the marginal utility per pound spent is equal across all goods.', hint:'Last pound spent on each good gives same extra utility' },
+  { topic:'micro', type:'text', q:'What is a Nash Equilibrium?', a:'A state where no player can improve their outcome by unilaterally changing strategy, given what everyone else is doing. No one has a profitable deviation.', hint:'Best response to best responses' },
+  { topic:'micro', type:'text', q:'What does price elasticity of demand measure?', a:'The % change in quantity demanded for a 1% change in price. PED = (ΔQ/Q)÷(ΔP/P). |PED| > 1 is elastic; < 1 is inelastic.', hint:'Elastic: consumers respond a lot. Inelastic: barely.' },
+  { topic:'micro', type:'text', q:'When does a natural monopoly arise?', a:'When average costs fall continuously over the relevant range of market demand — one large firm can serve the market cheaper than two smaller ones. High fixed costs, low marginal costs.', hint:'Utilities, rail, broadband infrastructure' },
+
+  // MATHS
+  { topic:'maths', type:'text', q:'What does it mean for a function to be convex?', a:'f is convex if the chord between any two points lies above or on the curve. Formally: f\'\'(x) ≥ 0. Convex functions have global minima — useful for cost minimisation.', hint:'Cup shape = convex; dome = concave' },
+  { topic:'maths', type:'text', q:'State the chain rule.', a:'If y = f(g(x)), then dy/dx = f\'(g(x)) · g\'(x). Differentiate the outer function evaluated at the inner, then multiply by the derivative of the inner.', hint:'Outside-prime × inside-prime' },
+  { topic:'maths', type:'text', q:'What is a Lagrangian and when do you use it?', a:'A method for constrained optimisation. L = f(x,y) − λg(x,y). Set all partial derivatives to zero and solve. λ is the shadow price — the value of relaxing the constraint by one unit.', hint:'Maximise utility subject to budget constraint' },
+  { topic:'maths', type:'text', q:'What does the second-order condition tell you?', a:'Whether a stationary point is a max or min. f\'\'(x) < 0 → local maximum; f\'\'(x) > 0 → local minimum; f\'\'(x) = 0 → test is inconclusive, check further.', hint:'First order finds it; second order classifies it' },
+  { topic:'maths', type:'text', q:'What is the difference between a total and a partial derivative?', a:'A partial derivative (∂f/∂x) holds all other variables constant. A total derivative (df/dx) accounts for all channels through which x affects f, including indirect effects.', hint:'∂ treats others as constant; d does not' },
+
+  // FINANCE
+  { topic:'finance', type:'text', q:'What does CAPM say about expected return?', a:'E(Rᵢ) = Rf + βᵢ(E(Rm) − Rf). Expected return = risk-free rate + beta × market risk premium. Only systematic risk is priced; idiosyncratic risk diversifies away.', hint:'Beta measures sensitivity to market moves' },
+  { topic:'finance', type:'text', q:'What is the difference between systematic and idiosyncratic risk?', a:'Systematic (market) risk affects all assets and cannot be diversified away — it is priced by the market. Idiosyncratic risk is firm-specific and disappears in a large portfolio.', hint:'Systematic = beta; idiosyncratic = residual noise' },
+  { topic:'finance', type:'text', q:'What does Modigliani-Miller state in a world without taxes?', a:'In perfect capital markets, firm value is independent of capital structure. Whether you finance with debt or equity is irrelevant to total value — only the asset side matters.', hint:'Add taxes: debt has a tax shield, so structure matters' },
+  { topic:'finance', type:'text', q:'What does the yield curve slope typically signal?', a:'Upward sloping = market expects rates to rise or growth ahead. Inverted = often signals recession expectations. Flat = uncertainty about future direction of rates.', hint:'Inverted curves have historically preceded recessions' },
+  { topic:'finance', type:'text', q:'What is duration in fixed income?', a:'The weighted average time to receive a bond\'s cash flows, and a measure of interest rate sensitivity. Higher duration means greater price sensitivity to rate changes.', hint:'Zero-coupon long bonds have highest duration' },
+];
+
+function makeADASGraph() {
+  return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:180px">
+    <defs>
+      <marker id="ah" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="#555"/>
+      </marker>
+    </defs>
+    <line x1="30" y1="10" x2="30" y2="190" stroke="#333" stroke-width="1.5" marker-end="url(#ah)"/>
+    <line x1="20" y1="180" x2="290" y2="180" stroke="#333" stroke-width="1.5" marker-end="url(#ah)"/>
+    <text x="14" y="8" fill="#666" font-size="9" font-family="DM Mono,monospace">P</text>
+    <text x="285" y="192" fill="#666" font-size="9" font-family="DM Mono,monospace">Y</text>
+    <!-- LRAS -->
+    <line x1="170" y1="20" x2="170" y2="175" stroke="#c8f55a" stroke-width="2" stroke-dasharray="none"/>
+    <text x="172" y="16" fill="#c8f55a" font-size="9" font-family="DM Sans,sans-serif">LRAS</text>
+    <!-- SRAS -->
+    <line x1="60" y1="175" x2="280" y2="60" stroke="#f5a623" stroke-width="1.8"/>
+    <text x="262" y="56" fill="#f5a623" font-size="9" font-family="DM Sans,sans-serif">SRAS</text>
+    <!-- AD -->
+    <line x1="60" y1="60" x2="270" y2="170" stroke="#7b9fff" stroke-width="1.8"/>
+    <text x="250" y="168" fill="#7b9fff" font-size="9" font-family="DM Sans,sans-serif">AD</text>
+    <!-- Point A -->
+    <circle cx="170" cy="115" r="5" fill="#c8f55a"/>
+    <text x="176" y="114" fill="#c8f55a" font-size="11" font-family="DM Serif Display,serif" font-style="italic">A</text>
+  </svg>`;
+}
+
+function makeMonopolyGraph() {
+  return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:180px">
+    <defs>
+      <marker id="ah2" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="#555"/>
+      </marker>
+    </defs>
+    <line x1="30" y1="10" x2="30" y2="190" stroke="#333" stroke-width="1.5" marker-end="url(#ah2)"/>
+    <line x1="20" y1="180" x2="290" y2="180" stroke="#333" stroke-width="1.5" marker-end="url(#ah2)"/>
+    <text x="14" y="8" fill="#666" font-size="9" font-family="DM Mono,monospace">P</text>
+    <text x="285" y="192" fill="#666" font-size="9" font-family="DM Mono,monospace">Q</text>
+    <!-- MC = flat -->
+    <line x1="40" y1="140" x2="270" y2="140" stroke="#c8f55a" stroke-width="1.8"/>
+    <text x="250" y="136" fill="#c8f55a" font-size="9" font-family="DM Sans,sans-serif">MC</text>
+    <!-- Demand -->
+    <line x1="50" y1="40" x2="260" y2="175" stroke="#7b9fff" stroke-width="1.8"/>
+    <text x="240" y="172" fill="#7b9fff" font-size="9" font-family="DM Sans,sans-serif">D</text>
+    <!-- MR -->
+    <line x1="50" y1="40" x2="155" y2="175" stroke="#ff9fff" stroke-width="1.8"/>
+    <text x="136" y="172" fill="#ff9fff" font-size="9" font-family="DM Sans,sans-serif">MR</text>
+    <!-- Monopoly Qm -->
+    <line x1="103" y1="140" x2="103" y2="180" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
+    <!-- Competitive Qc -->
+    <line x1="176" y1="140" x2="176" y2="180" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
+    <!-- Pm line -->
+    <line x1="30" y1="83" x2="103" y2="83" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
+    <!-- DWL triangle fill -->
+    <polygon points="103,83 176,140 103,140" fill="rgba(255,107,107,0.25)" stroke="#ff6b6b" stroke-width="1"/>
+    <text x="90" y="178" fill="#888" font-size="8" font-family="DM Mono,monospace">Qm</text>
+    <text x="163" y="178" fill="#888" font-size="8" font-family="DM Mono,monospace">Qc</text>
+    <text x="33" y="86" fill="#888" font-size="8" font-family="DM Mono,monospace">Pm</text>
+    <text x="33" y="143" fill="#888" font-size="8" font-family="DM Mono,monospace">Pc</text>
+    <text x="118" y="122" fill="#ff6b6b" font-size="8" font-family="DM Sans,sans-serif">DWL</text>
+  </svg>`;
+}
+
+// State
+let deck = [], idx = 0, flipped = false;
+let sessionGot = 0, sessionAlmost = 0, sessionHard = 0;
+let totalXP = parseInt(localStorage.getItem('eq_xp') || '0');
+let totalCards = parseInt(localStorage.getItem('eq_cards') || '0');
+let totalGot = parseInt(localStorage.getItem('eq_got') || '0');
+let streak = parseInt(localStorage.getItem('eq_streak') || '0');
+let currentTopic = 'all';
+
+function updateHomeStats() {
+  document.getElementById('total-xp').textContent = totalXP;
+  document.getElementById('cards-done').textContent = totalCards;
+  const mastery = totalCards > 0 ? Math.round((totalGot / totalCards) * 100) : 0;
+  document.getElementById('mastery-pct').textContent = mastery + '%';
+  document.getElementById('streak-num').textContent = streak;
+  document.getElementById('xp-badge').textContent = totalXP + ' XP';
+  const topics = ['macro','micro','maths','finance'];
+  topics.forEach(t => {
+    document.getElementById('count-' + t).textContent = CARDS.filter(c => c.topic === t).length + ' cards';
+  });
+  document.getElementById('count-all').textContent = CARDS.length + ' cards';
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  updateHomeStats();
+  showScreen('home');
+}
+
+function startStudy(topic) {
+  currentTopic = topic;
+  idx = 0; flipped = false; sessionGot = 0; sessionAlmost = 0; sessionHard = 0;
+  const filtered = topic === 'all' ? CARDS : CARDS.filter(c => c.topic === topic);
+  deck = shuffle(filtered).slice(0, 10);
+  showScreen('study');
+  renderCard();
+}
+
+function renderCard() {
+  if (idx >= deck.length) { showDone(); return; }
+  const c = deck[idx];
+  flipped = false;
+  document.getElementById('card-inner').classList.remove('flipped');
+  document.getElementById('study-badge').textContent = c.topic;
+  document.getElementById('card-q').textContent = c.q;
+  document.getElementById('tap-cue').classList.remove('hidden');
+  document.getElementById('rating-btns').classList.add('hidden');
+  document.getElementById('rating-label').classList.add('hidden');
+
+  // Back content
+  const backContent = document.getElementById('card-back-content');
+  if (c.type === 'graph') {
+    let graphHtml = '';
+    if (c.graphType === 'ad-as') graphHtml = makeADASGraph();
+    else if (c.graphType === 'monopoly') graphHtml = makeMonopolyGraph();
+    backContent.innerHTML = `<div class="graph-container">${graphHtml}</div><div class="card-a">${c.a}</div>`;
+  } else {
+    backContent.innerHTML = `<div class="card-a">${c.a}</div>`;
+  }
+
+  // Front graph
+  const front = document.getElementById('card-front');
+  const existingGraph = front.querySelector('.graph-container');
+  if (existingGraph) existingGraph.remove();
+  if (c.type === 'graph') {
+    let graphHtml = '';
+    if (c.graphType === 'ad-as') graphHtml = makeADASGraph();
+    else if (c.graphType === 'monopoly') graphHtml = makeMonopolyGraph();
+    const gc = document.createElement('div');
+    gc.className = 'graph-container';
+    gc.innerHTML = graphHtml;
+    front.insertBefore(gc, front.querySelector('.card-q'));
+    document.getElementById('card-q').style.fontSize = '15px';
+  } else {
+    document.getElementById('card-q').style.fontSize = '';
+  }
+
+  document.getElementById('card-hint-el').textContent = '💡 ' + c.hint;
+  const pct = Math.round((idx / deck.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('card-counter').textContent = (idx+1) + '/' + deck.length;
+}
+
+function flipCard() {
+  if (flipped) return;
+  flipped = true;
+  document.getElementById('card-inner').classList.add('flipped');
+  document.getElementById('tap-cue').classList.add('hidden');
+  document.getElementById('rating-btns').classList.remove('hidden');
+  document.getElementById('rating-label').classList.remove('hidden');
+}
+
+function rate(level) {
+  let xpGain = 0;
+  if (level === 'easy') { xpGain = 10; sessionGot++; totalGot++; }
+  else if (level === 'medium') { xpGain = 5; sessionAlmost++; }
+  else { xpGain = 2; sessionHard++; }
+  totalXP += xpGain;
+  totalCards++;
+  localStorage.setItem('eq_xp', totalXP);
+  localStorage.setItem('eq_cards', totalCards);
+  localStorage.setItem('eq_got', totalGot);
+  idx++;
+  renderCard();
+}
+
+function showDone() {
+  const total = sessionGot + sessionAlmost + sessionHard;
+  const pct = total > 0 ? Math.round((sessionGot / total) * 100) : 0;
+  document.getElementById('d-got').textContent = sessionGot;
+  document.getElementById('d-almost').textContent = sessionAlmost;
+  document.getElementById('d-hard').textContent = sessionHard;
+  document.getElementById('done-sub').textContent = pct + '% mastery this session. ' + (pct >= 80 ? 'Excellent.' : pct >= 50 ? 'Getting there.' : 'Keep drilling — it compounds.');
+  streak++;
+  localStorage.setItem('eq_streak', streak);
+  showScreen('done');
+}
+
+function restartSession() { startStudy(currentTopic); }
+
+updateHomeStats();
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
