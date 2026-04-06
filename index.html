@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -12,481 +12,563 @@
 <title>Econiq</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --surface2: #1e1e1e;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f0ede6;
-    --text2: #888;
-    --text3: #555;
-    --accent: #c8f55a;
-    --accent-dim: rgba(200,245,90,0.12);
-    --red: #ff6b6b;
-    --amber: #f5a623;
-    --green: #c8f55a;
-    --serif: 'DM Serif Display', Georgia, serif;
-    --sans: 'DM Sans', sans-serif;
-    --mono: 'DM Mono', monospace;
-    --r: 14px;
-    --r-lg: 20px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; }
-
-  /* SCREENS */
-  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-  .screen.active { opacity: 1; pointer-events: all; }
-
-  /* HOME SCREEN */
-  #home { padding: 0; justify-content: space-between; }
-  .home-header { padding: 56px 28px 0; }
-  .logo { font-family: var(--serif); font-size: 36px; color: var(--text); letter-spacing: -0.5px; }
-  .logo span { color: var(--accent); }
-  .tagline { font-size: 13px; color: var(--text3); margin-top: 4px; font-weight: 300; letter-spacing: 0.3px; }
-
-  .stats-strip { display: flex; gap: 10px; padding: 32px 28px 0; }
-  .stat-box { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r); padding: 14px; }
-  .stat-box .val { font-family: var(--mono); font-size: 22px; font-weight: 500; color: var(--text); }
-  .stat-box .lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
-  .topic-grid { padding: 28px 28px 0; }
-  .topic-grid-label { font-size: 11px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
-  .topics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .topic-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r-lg); padding: 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; overflow: hidden; }
-  .topic-card:active { transform: scale(0.98); }
-  .topic-card.all { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; }
-  .topic-card .icon { font-size: 22px; margin-bottom: 10px; }
-  .topic-card.all .icon { margin: 0; }
-  .topic-card .name { font-size: 14px; font-weight: 500; color: var(--text); }
-  .topic-card .count { font-size: 11px; color: var(--text3); margin-top: 3px; }
-  .topic-card.all .name { font-size: 16px; }
-  .topic-card .progress-dot { position: absolute; top: 14px; right: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0; }
-  .topic-card.has-progress .progress-dot { opacity: 1; }
-  .topic-card:hover, .topic-card:active { border-color: var(--border2); background: var(--surface2); }
-
-  .home-footer { padding: 20px 28px 40px; }
-  .streak-bar { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 40px; padding: 10px 16px; }
-  .streak-fire { font-size: 18px; }
-  .streak-text { font-size: 13px; color: var(--text2); flex: 1; }
-  .streak-text strong { color: var(--text); font-weight: 500; }
-  .xp-badge { font-family: var(--mono); font-size: 12px; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 20px; }
-
-  /* STUDY SCREEN */
-  #study { background: var(--bg); }
-  .study-header { display: flex; align-items: center; gap: 12px; padding: 56px 20px 16px; }
-  .back-btn { width: 36px; height: 36px; border-radius: 50%; border: 0.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; }
-  .back-btn:active { transform: scale(0.95); }
-  .progress-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s ease; }
-  .card-counter { font-family: var(--mono); font-size: 12px; color: var(--text3); white-space: nowrap; }
-
-  .card-area { flex: 1; padding: 8px 20px 0; display: flex; flex-direction: column; }
-  .topic-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 11px; color: var(--text3); margin-bottom: 16px; align-self: flex-start; letter-spacing: 0.5px; text-transform: uppercase; }
-
-  /* CARD */
-  .card-scene { flex: 1; perspective: 1200px; margin-bottom: 16px; min-height: 0; }
-  .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-  .card-inner.flipped { transform: rotateY(180deg); }
-  .card-face { position: absolute; inset: 0; backface-visibility: hidden; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px 24px; text-align: center; }
-  .card-back { transform: rotateY(180deg); background: var(--surface2); justify-content: flex-start; padding-top: 32px; overflow-y: auto; }
-  .card-label { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
-  .card-q { font-family: var(--serif); font-size: 22px; line-height: 1.4; color: var(--text); font-style: italic; }
-  .card-a { font-size: 15px; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
-  .card-hint { font-size: 12px; color: var(--text3); border-top: 0.5px solid var(--border); padding-top: 14px; width: 100%; text-align: center; font-style: italic; }
-  .tap-cue { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 4px; letter-spacing: 0.3px; }
-
-  /* GRAPH CARD */
-  .graph-container { width: 100%; margin-bottom: 16px; }
-  .graph-container svg { width: 100%; height: auto; }
-
-  /* RATING */
-  .rating-area { padding: 0 20px 40px; }
-  .rating-label { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 10px; letter-spacing: 0.5px; }
-  .rating-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .r-btn { border: 0.5px solid var(--border); background: var(--surface); border-radius: var(--r); padding: 12px 6px; cursor: pointer; text-align: center; transition: all 0.15s; color: var(--text); font-family: var(--sans); }
-  .r-btn:active { transform: scale(0.97); }
-  .r-btn .r-icon { font-size: 20px; display: block; margin-bottom: 5px; }
-  .r-btn .r-lbl { font-size: 12px; color: var(--text2); }
-  .r-btn.easy { border-color: rgba(200,245,90,0.3); }
-  .r-btn.easy:active { background: rgba(200,245,90,0.08); }
-  .r-btn.medium { border-color: rgba(245,166,35,0.3); }
-  .r-btn.medium:active { background: rgba(245,166,35,0.08); }
-  .r-btn.hard { border-color: rgba(255,107,107,0.3); }
-  .r-btn.hard:active { background: rgba(255,107,107,0.08); }
-  .hidden { display: none !important; }
-
-  /* DONE SCREEN */
-  #done { justify-content: center; align-items: center; padding: 28px; }
-  .done-icon { font-size: 56px; margin-bottom: 20px; }
-  .done-title { font-family: var(--serif); font-size: 32px; color: var(--text); margin-bottom: 8px; }
-  .done-sub { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.7; margin-bottom: 32px; max-width: 280px; }
-  .done-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 32px; }
-  .done-stat { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
-  .done-stat .v { font-family: var(--mono); font-size: 28px; font-weight: 500; }
-  .done-stat .l { font-size: 11px; color: var(--text3); margin-top: 4px; }
-  .done-stat.g .v { color: var(--green); }
-  .done-stat.a .v { color: var(--amber); }
-  .done-stat.r .v { color: var(--red); }
-  .done-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-  .btn-primary { background: var(--accent); color: #0a0a0a; border: none; border-radius: var(--r); padding: 16px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: var(--sans); }
-  .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
-  .btn-secondary { background: var(--surface); color: var(--text2); border: 0.5px solid var(--border); border-radius: var(--r); padding: 16px; font-size: 15px; cursor: pointer; font-family: var(--sans); }
-  .btn-secondary:active { transform: scale(0.98); }
-
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .screen.active .home-header, .screen.active .stats-strip, .screen.active .topic-grid, .screen.active .home-footer {
-    animation: slideUp 0.4s ease both;
-  }
-  .screen.active .stats-strip { animation-delay: 0.05s; }
-  .screen.active .topic-grid { animation-delay: 0.1s; }
-  .screen.active .home-footer { animation-delay: 0.15s; }
+:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text:#f0ede6;--text2:#888;--text3:#555;--accent:#c8f55a;--accent-dim:rgba(200,245,90,0.12);--red:#ff6b6b;--amber:#f5a623;--green:#c8f55a;--serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--r:14px;--r-lg:20px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.screen.active{opacity:1;pointer-events:all}
+#home{justify-content:space-between}
+.home-header{padding:56px 28px 0}
+.logo{font-family:var(--serif);font-size:36px;letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.tagline{font-size:13px;color:var(--text3);margin-top:4px;font-weight:300;letter-spacing:.3px}
+.stats-strip{display:flex;gap:10px;padding:24px 28px 0}
+.stat-box{flex:1;background:var(--surface);border:.5px solid var(--border);border-radius:var(--r);padding:14px}
+.stat-box .val{font-family:var(--mono);font-size:22px;font-weight:500}
+.stat-box .lbl{font-size:11px;color:var(--text3);margin-top:2px}
+.topic-grid{padding:20px 28px 0;flex:1;overflow-y:auto}
+.topic-grid-label{font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.topic-card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.topic-card:active{transform:scale(.98)}
+.topic-card.all{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}
+.topic-card .icon{font-size:22px;margin-bottom:10px}
+.topic-card.all .icon{margin:0}
+.topic-card .name{font-size:14px;font-weight:500}
+.topic-card .count{font-size:11px;color:var(--text3);margin-top:3px}
+.topic-card.all .name{font-size:16px}
+.topic-card:active{border-color:var(--border2);background:var(--surface2)}
+.home-footer{padding:16px 28px 40px}
+.streak-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:.5px solid var(--border);border-radius:40px;padding:10px 16px}
+.streak-fire{font-size:18px}
+.streak-text{font-size:13px;color:var(--text2);flex:1}
+.streak-text strong{color:var(--text);font-weight:500}
+.xp-badge{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-dim);padding:3px 10px;border-radius:20px}
+#study{background:var(--bg)}
+.study-header{display:flex;align-items:center;gap:12px;padding:56px 20px 16px;flex-shrink:0}
+.back-btn{width:36px;height:36px;border-radius:50%;border:.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.back-btn:active{transform:scale(.95)}
+.progress-track{flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .5s ease}
+.card-counter{font-family:var(--mono);font-size:12px;color:var(--text3);white-space:nowrap}
+.card-area{flex:1;padding:8px 20px 0;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.topic-badge{display:inline-flex;align-items:center;background:var(--surface);border:.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--text3);margin-bottom:12px;align-self:flex-start;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
+.card-scene{flex:1;perspective:1200px;margin-bottom:10px;min-height:0}
+.card-inner{width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.card-inner.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;background:var(--surface);border:.5px solid var(--border);border-radius:var(--r-lg);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px 22px;text-align:center;overflow-y:auto}
+.card-back{transform:rotateY(180deg);background:var(--surface2);justify-content:flex-start;padding-top:24px}
+.card-label{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;flex-shrink:0}
+.card-q{font-family:var(--serif);font-size:19px;line-height:1.45;font-style:italic}
+.card-a{font-size:13px;line-height:1.7;text-align:left;width:100%;margin-bottom:12px}
+.card-hint{font-size:11px;color:var(--text3);border-top:.5px solid var(--border);padding-top:12px;width:100%;text-align:center;font-style:italic;flex-shrink:0}
+.tap-cue{font-size:11px;color:var(--text3);text-align:center;margin-bottom:4px;flex-shrink:0}
+.mc-options{display:flex;flex-direction:column;gap:8px;padding:0 20px 10px;flex-shrink:0}
+.mc-btn{background:var(--surface);border:.5px solid var(--border);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--text);cursor:pointer;text-align:left;font-family:var(--sans);line-height:1.4;transition:all .15s}
+.mc-btn:active{transform:scale(.99)}
+.mc-btn.correct{border-color:var(--green);background:rgba(200,245,90,.1);color:var(--green)}
+.mc-btn.wrong{border-color:var(--red);background:rgba(255,107,107,.1);color:var(--red)}
+.mc-btn.reveal-correct{border-color:var(--green);background:rgba(200,245,90,.07)}
+.mc-btn:disabled{cursor:default}
+.mc-next{margin:0 20px 10px;background:var(--surface2);border:.5px solid var(--border2);border-radius:var(--r);padding:13px;font-size:14px;color:var(--text2);cursor:pointer;font-family:var(--sans);flex-shrink:0}
+.mc-next:active{transform:scale(.98)}
+.rating-area{padding:0 20px 32px;flex-shrink:0}
+.rating-label{font-size:11px;color:var(--text3);text-align:center;margin-bottom:10px;letter-spacing:.5px}
+.rating-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.r-btn{border:.5px solid var(--border);background:var(--surface);border-radius:var(--r);padding:12px 6px;cursor:pointer;text-align:center;transition:all .15s;color:var(--text);font-family:var(--sans)}
+.r-btn:active{transform:scale(.97)}
+.r-btn .r-icon{font-size:18px;display:block;margin-bottom:4px}
+.r-btn .r-lbl{font-size:12px;color:var(--text2)}
+.r-btn.easy{border-color:rgba(200,245,90,.3)}
+.r-btn.medium{border-color:rgba(245,166,35,.3)}
+.r-btn.hard{border-color:rgba(255,107,107,.3)}
+.hidden{display:none!important}
+#done{justify-content:center;align-items:center;padding:28px}
+.done-icon{font-size:56px;margin-bottom:20px}
+.done-title{font-family:var(--serif);font-size:32px;margin-bottom:8px}
+.done-sub{font-size:14px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:32px;max-width:280px}
+.done-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;margin-bottom:32px}
+.done-stat{background:var(--surface);border:.5px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
+.done-stat .v{font-family:var(--mono);font-size:28px;font-weight:500}
+.done-stat .l{font-size:11px;color:var(--text3);margin-top:4px}
+.done-stat.g .v{color:var(--green)}
+.done-stat.a .v{color:var(--amber)}
+.done-stat.r .v{color:var(--red)}
+.done-btns{display:flex;flex-direction:column;gap:10px;width:100%}
+.btn-primary{background:var(--accent);color:#0a0a0a;border:none;border-radius:var(--r);padding:16px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--sans)}
+.btn-primary:active{transform:scale(.98);opacity:.9}
+.btn-secondary{background:var(--surface);color:var(--text2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;font-size:15px;cursor:pointer;font-family:var(--sans)}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.screen.active .home-header{animation:slideUp .4s ease both}
+.screen.active .stats-strip{animation:slideUp .4s ease .05s both}
+.screen.active .topic-grid{animation:slideUp .4s ease .1s both}
+.screen.active .home-footer{animation:slideUp .4s ease .15s both}
 </style>
 </head>
 <body>
 
-<!-- HOME -->
 <div class="screen active" id="home">
   <div class="home-header">
     <div class="logo">econ<span>iq</span></div>
-    <div class="tagline">15 minutes a day. Economics & maths.</div>
+    <div class="tagline">15 minutter om dagen. Økonomi på dansk.</div>
   </div>
-
   <div class="stats-strip">
     <div class="stat-box"><div class="val" id="total-xp">0</div><div class="lbl">total xp</div></div>
-    <div class="stat-box"><div class="val" id="cards-done">0</div><div class="lbl">cards done</div></div>
-    <div class="stat-box"><div class="val" id="mastery-pct">0%</div><div class="lbl">mastery</div></div>
+    <div class="stat-box"><div class="val" id="cards-done">0</div><div class="lbl">kort lavet</div></div>
+    <div class="stat-box"><div class="val" id="mastery-pct">0%</div><div class="lbl">mestring</div></div>
   </div>
-
   <div class="topic-grid">
-    <div class="topic-grid-label">choose a module</div>
+    <div class="topic-grid-label">vælg et modul</div>
     <div class="topics">
       <div class="topic-card all" onclick="startStudy('all')">
-        <div><div class="name">All topics</div><div class="count" id="count-all">0 cards</div></div>
+        <div><div class="name">Alle moduler</div><div class="count" id="count-all">0 kort</div></div>
         <div class="icon">⚡</div>
       </div>
-      <div class="topic-card" onclick="startStudy('macro')">
-        <div class="progress-dot"></div>
-        <div class="icon">📈</div>
-        <div class="name">Macro</div>
-        <div class="count" id="count-macro">0 cards</div>
+      <div class="topic-card" onclick="startStudy('makro2')">
+        <div class="icon">📈</div><div class="name">Makro II</div>
+        <div class="count" id="count-makro2">0 kort</div>
       </div>
-      <div class="topic-card" onclick="startStudy('micro')">
-        <div class="progress-dot"></div>
-        <div class="icon">🏪</div>
-        <div class="name">Micro</div>
-        <div class="count" id="count-micro">0 cards</div>
+      <div class="topic-card" onclick="startStudy('mikro2')">
+        <div class="icon">🏪</div><div class="name">Mikro II</div>
+        <div class="count" id="count-mikro2">0 kort</div>
       </div>
-      <div class="topic-card" onclick="startStudy('maths')">
-        <div class="progress-dot"></div>
-        <div class="icon">∂</div>
-        <div class="name">Maths</div>
-        <div class="count" id="count-maths">0 cards</div>
+      <div class="topic-card" onclick="startStudy('okonometri')">
+        <div class="icon">∂</div><div class="name">Økonometri I</div>
+        <div class="count" id="count-okonometri">0 kort</div>
       </div>
-      <div class="topic-card" onclick="startStudy('finance')">
-        <div class="progress-dot"></div>
-        <div class="icon">💹</div>
-        <div class="name">Finance</div>
-        <div class="count" id="count-finance">0 cards</div>
+      <div class="topic-card" onclick="startStudy('videnskab')">
+        <div class="icon">🔬</div><div class="name">Videnskabsteori</div>
+        <div class="count" id="count-videnskab">0 kort</div>
       </div>
     </div>
   </div>
-
   <div class="home-footer">
     <div class="streak-bar">
       <span class="streak-fire">🔥</span>
-      <span class="streak-text"><strong id="streak-num">0</strong> day streak</span>
+      <span class="streak-text"><strong id="streak-num">0</strong> dages streak</span>
       <span class="xp-badge" id="xp-badge">0 XP</span>
     </div>
   </div>
 </div>
 
-<!-- STUDY -->
 <div class="screen" id="study">
   <div class="study-header">
     <div class="back-btn" onclick="goHome()">←</div>
     <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
     <div class="card-counter" id="card-counter">0/0</div>
   </div>
-
   <div class="card-area">
-    <div class="topic-badge" id="study-badge">macro</div>
-    <div class="card-scene" id="card-scene" onclick="flipCard()">
+    <div class="topic-badge" id="study-badge">makro</div>
+    <div class="card-scene" id="card-scene">
       <div class="card-inner" id="card-inner">
-        <div class="card-face card-front" id="card-front">
-          <div class="card-label">question</div>
+        <div class="card-face card-front" onclick="handleFrontClick()">
+          <div class="card-label">spørgsmål</div>
           <div class="card-q" id="card-q">...</div>
         </div>
-        <div class="card-face card-back" id="card-back">
-          <div class="card-label">answer</div>
-          <div id="card-back-content"></div>
+        <div class="card-face card-back">
+          <div class="card-label">svar</div>
+          <div id="card-back-content" style="width:100%"></div>
           <div class="card-hint" id="card-hint-el"></div>
         </div>
       </div>
     </div>
-    <div class="tap-cue" id="tap-cue">tap to reveal</div>
+    <div class="tap-cue" id="tap-cue">tryk for at se svaret</div>
   </div>
-
-  <div class="rating-area">
-    <div class="rating-label hidden" id="rating-label">how did you do?</div>
+  <div class="mc-options hidden" id="mc-options"></div>
+  <button class="mc-next hidden" id="mc-next" onclick="nextCard()">Næste →</button>
+  <div class="rating-area" id="rating-area">
+    <div class="rating-label hidden" id="rating-label">hvordan gik det?</div>
     <div class="rating-btns hidden" id="rating-btns">
-      <button class="r-btn hard" onclick="rate('hard')"><span class="r-icon">😓</span><span class="r-lbl">Again</span></button>
-      <button class="r-btn medium" onclick="rate('medium')"><span class="r-icon">🤔</span><span class="r-lbl">Almost</span></button>
-      <button class="r-btn easy" onclick="rate('easy')"><span class="r-icon">✓</span><span class="r-lbl">Got it</span></button>
+      <button class="r-btn hard" onclick="rate('hard')"><span class="r-icon">😓</span><span class="r-lbl">Igen</span></button>
+      <button class="r-btn medium" onclick="rate('medium')"><span class="r-icon">🤔</span><span class="r-lbl">Næsten</span></button>
+      <button class="r-btn easy" onclick="rate('easy')"><span class="r-icon">✓</span><span class="r-lbl">Forstået</span></button>
     </div>
   </div>
 </div>
 
-<!-- DONE -->
 <div class="screen" id="done">
   <div class="done-icon">🎯</div>
-  <div class="done-title">Session done.</div>
-  <div class="done-sub" id="done-sub">You completed a session.</div>
+  <div class="done-title">Session færdig.</div>
+  <div class="done-sub" id="done-sub"></div>
   <div class="done-stats">
-    <div class="done-stat g"><div class="v" id="d-got">0</div><div class="l">got it</div></div>
-    <div class="done-stat a"><div class="v" id="d-almost">0</div><div class="l">almost</div></div>
-    <div class="done-stat r"><div class="v" id="d-hard">0</div><div class="l">again</div></div>
+    <div class="done-stat g"><div class="v" id="d-got">0</div><div class="l">forstået</div></div>
+    <div class="done-stat a"><div class="v" id="d-almost">0</div><div class="l">næsten</div></div>
+    <div class="done-stat r"><div class="v" id="d-hard">0</div><div class="l">igen</div></div>
   </div>
   <div class="done-btns">
-    <button class="btn-primary" onclick="restartSession()">Go again</button>
-    <button class="btn-secondary" onclick="goHome()">Back to home</button>
+    <button class="btn-primary" onclick="restartSession()">Kør igen</button>
+    <button class="btn-secondary" onclick="goHome()">Tilbage til start</button>
   </div>
 </div>
 
 <script>
-const CARDS = [
-  // MACRO
-  { topic:'macro', type:'text', q:'Where does long-run equilibrium occur, and why is it stable?', a:'At the intersection of AD and LRAS. It\'s stable because LRAS is fixed at potential output — the economy self-corrects back here via wage and price adjustment over time.', hint:'SRAS shifts until it meets LRAS' },
-  { topic:'macro', type:'text', q:'What shifts the LRAS curve rightward?', a:'Improvements in productive capacity: better technology, larger labour force, more capital stock, stronger institutions. Price level and demand changes do NOT shift LRAS.', hint:'Supply-side only — think long-run growth' },
-  { topic:'macro', type:'graph', graphType:'ad-as', q:'In this AD-AS diagram, the economy is at point A. What happens if aggregate demand falls?', a:'AD shifts left. In the short run, output falls below potential and price level drops — point B. In the long run, wages fall, SRAS shifts right, returning to potential output at a lower price level.', hint:'Short run: below LRAS. Long run: back to LRAS.' },
-  { topic:'macro', type:'text', q:'Why is the Phillips curve vertical in the long run?', a:'Workers and firms eventually adjust expectations to actual inflation, so unemployment always returns to the natural rate regardless of the inflation level chosen.', hint:'Expected inflation = actual inflation in LR' },
-  { topic:'macro', type:'text', q:'What is the Fisher effect?', a:'Nominal interest rate = real interest rate + expected inflation. In the long run, higher inflation raises nominal rates one-for-one, leaving real rates unchanged.', hint:'i = r + π' },
-  { topic:'macro', type:'text', q:'What causes crowding out in fiscal policy?', a:'Government borrowing raises interest rates, which reduces private investment. The fiscal stimulus is partially offset — the multiplier is dampened.', hint:'Higher r → lower I' },
-  { topic:'macro', type:'text', q:'What is the difference between cyclical and structural unemployment?', a:'Cyclical unemployment is demand-deficient — it rises when output falls below potential. Structural unemployment persists even at potential output due to skills mismatches.', hint:'Cyclical = short-run; structural = long-run' },
+const CARDS=[
+  // ── MAKRO II ──────────────────────────────────────────
+  {topic:'makro2',type:'text',
+   q:'Hvad er Taylor-princippet?',
+   a:'Centralbanken hæver den nominelle rente med mere end stigningen i inflationen, så realrenten faktisk stiger og dæmper efterspørgslen. Reaktionsparameteren h > 0 i Taylor-reglen sikrer dette.',
+   hint:'Hvis i stiger præcis som π, ændres realrenten ikke'},
 
-  // MICRO
-  { topic:'micro', type:'text', q:'Why does a perfectly competitive firm produce where P = MC?', a:'If P > MC, producing one more unit adds more revenue than cost — profit rises. If P < MC, the unit destroys profit. Equilibrium: keep going until P = MC.', hint:'Think at the margin' },
-  { topic:'micro', type:'graph', graphType:'monopoly', q:'In this monopoly diagram, which area represents the deadweight loss?', a:'The triangle between the competitive quantity (where P=MC) and the monopoly quantity. The monopolist restricts output below the efficient level, creating welfare loss.', hint:'Deadweight loss = unrealised gains from trade' },
-  { topic:'micro', type:'text', q:'What is the condition for consumer optimum?', a:'Utility is maximised where MU₁/P₁ = MU₂/P₂ — the marginal utility per pound spent is equal across all goods.', hint:'Last pound spent on each good gives same extra utility' },
-  { topic:'micro', type:'text', q:'What is a Nash Equilibrium?', a:'A state where no player can improve their outcome by unilaterally changing strategy, given what everyone else is doing. No one has a profitable deviation.', hint:'Best response to best responses' },
-  { topic:'micro', type:'text', q:'What does price elasticity of demand measure?', a:'The % change in quantity demanded for a 1% change in price. PED = (ΔQ/Q)÷(ΔP/P). |PED| > 1 is elastic; < 1 is inelastic.', hint:'Elastic: consumers respond a lot. Inelastic: barely.' },
-  { topic:'micro', type:'text', q:'When does a natural monopoly arise?', a:'When average costs fall continuously over the relevant range of market demand — one large firm can serve the market cheaper than two smaller ones. High fixed costs, low marginal costs.', hint:'Utilities, rail, broadband infrastructure' },
+  {topic:'makro2',type:'mc',
+   q:'Hvad sker der på lang sigt, hvis finanspolitikken strammes permanent (lavere G)?',
+   options:['Output falder permanent under ȳ','Inflationen stiger kompenserende','Sammensætningen af efterspørgsel ændres, men output forbliver ȳ','Centralbanken hæver renten for at stabilisere'],
+   correct:2,hint:'Crowding-in: lavere r → højere privat I erstatter lavere G'},
 
-  // MATHS
-  { topic:'maths', type:'text', q:'What does it mean for a function to be convex?', a:'f is convex if the chord between any two points lies above or on the curve. Formally: f\'\'(x) ≥ 0. Convex functions have global minima — useful for cost minimisation.', hint:'Cup shape = convex; dome = concave' },
-  { topic:'maths', type:'text', q:'State the chain rule.', a:'If y = f(g(x)), then dy/dx = f\'(g(x)) · g\'(x). Differentiate the outer function evaluated at the inner, then multiply by the derivative of the inner.', hint:'Outside-prime × inside-prime' },
-  { topic:'maths', type:'text', q:'What is a Lagrangian and when do you use it?', a:'A method for constrained optimisation. L = f(x,y) − λg(x,y). Set all partial derivatives to zero and solve. λ is the shadow price — the value of relaxing the constraint by one unit.', hint:'Maximise utility subject to budget constraint' },
-  { topic:'maths', type:'text', q:'What does the second-order condition tell you?', a:'Whether a stationary point is a max or min. f\'\'(x) < 0 → local maximum; f\'\'(x) > 0 → local minimum; f\'\'(x) = 0 → test is inconclusive, check further.', hint:'First order finds it; second order classifies it' },
-  { topic:'maths', type:'text', q:'What is the difference between a total and a partial derivative?', a:'A partial derivative (∂f/∂x) holds all other variables constant. A total derivative (df/dx) accounts for all channels through which x affects f, including indirect effects.', hint:'∂ treats others as constant; d does not' },
+  {topic:'makro2',type:'text',
+   q:'Hvad er den forventningsudvidede Phillips-kurve?',
+   a:'πt = πt^e + γ(Yt − Ȳ) + st. Inflationen afhænger af inflationsforventninger, outputgabet og udbudsstød. γ måler prisfølsomheden: høj γ = stejl kurve = fleksible priser.',
+   hint:'Høj γ → store outputændringer giver stor inflationseffekt'},
 
-  // FINANCE
-  { topic:'finance', type:'text', q:'What does CAPM say about expected return?', a:'E(Rᵢ) = Rf + βᵢ(E(Rm) − Rf). Expected return = risk-free rate + beta × market risk premium. Only systematic risk is priced; idiosyncratic risk diversifies away.', hint:'Beta measures sensitivity to market moves' },
-  { topic:'finance', type:'text', q:'What is the difference between systematic and idiosyncratic risk?', a:'Systematic (market) risk affects all assets and cannot be diversified away — it is priced by the market. Idiosyncratic risk is firm-specific and disappears in a large portfolio.', hint:'Systematic = beta; idiosyncratic = residual noise' },
-  { topic:'finance', type:'text', q:'What does Modigliani-Miller state in a world without taxes?', a:'In perfect capital markets, firm value is independent of capital structure. Whether you finance with debt or equity is irrelevant to total value — only the asset side matters.', hint:'Add taxes: debt has a tax shield, so structure matters' },
-  { topic:'finance', type:'text', q:'What does the yield curve slope typically signal?', a:'Upward sloping = market expects rates to rise or growth ahead. Inverted = often signals recession expectations. Flat = uncertainty about future direction of rates.', hint:'Inverted curves have historically preceded recessions' },
-  { topic:'finance', type:'text', q:'What is duration in fixed income?', a:'The weighted average time to receive a bond\'s cash flows, and a measure of interest rate sensitivity. Higher duration means greater price sensitivity to rate changes.', hint:'Zero-coupon long bonds have highest duration' },
+  {topic:'makro2',type:'mc',
+   q:'Hvad er Tobin\'s q, og hvornår bør en virksomhed investere?',
+   options:['q = Markedsværdi / Bogført egenkapital; investér når q < 1','q = Markedsværdi / Genanskaffelsesværdi af kapital; investér når q > 1','q = Dividende / Aktiekurs; investér altid når q stiger','q = Realrente / Nominel rente; investér når q = 1'],
+   correct:1,hint:'q > 1: markedet vurderer ny kapital højere end den koster'},
+
+  {topic:'makro2',type:'text',
+   q:'Hvad er UIP-betingelsen, og hvad er intuitionen?',
+   a:'i = i* + Δe^e. Den indenlandske rente skal svare til den udenlandske rente plus forventet valutakursændring. Fri kapitalstrøm eliminerer arbitragemuligheder — afkast udlignes på tværs af lande.',
+   hint:'Arbitrage tvinger afkast til at udlignes'},
+
+  {topic:'makro2',type:'mc',
+   q:'Hvad kendetegner langsigtsligevægt i AS-AD-modellen?',
+   options:['AD skærer SRAS; π > π*','Output er over potentielt niveau ȳ','AD skærer LRAS; faktisk output = ȳ og π = π^e','Centralbanken sætter i = 0'],
+   correct:2,hint:'På lang sigt bestemmer udbuddet – ikke efterspørgslen'},
+
+  {topic:'makro2',type:'text',
+   q:'Hvad er Fisher-ligningen og Fisher-effekten?',
+   a:'i ≈ r + π^e. Nominel rente = realrente + forventet inflation. Fisher-effekten: på lang sigt fører 1 pp højere inflation til 1 pp højere nominel rente, mens realrenten forbliver uændret.',
+   hint:'Långivere kræver kompensation for inflation'},
+
+  {topic:'makro2',type:'mc',
+   q:'Hvad er den sociale velfærdstabsfunktion SL?',
+   options:['SL = (y − ȳ) + κ(π − π*)','SL = (y − ȳ)² + κ(π − π*)²','SL = κ(y − ȳ)² − (π − π*)²','SL = (y − ȳ) · κ · (π − π*)'],
+   correct:1,hint:'Kvadreret: store afvigelser er uforholdsmæssigt skadelige'},
+
+  {topic:'makro2',type:'text',
+   q:'Hvad er Ricardiansk Ækvivalens, og hvornår bryder den sammen?',
+   a:'En lånefinansieret skattelettelse ændrer ikke privatforbruget — rationelle husholdninger sparer op til fremtidige skatter. Bryder ned ved: 1) kreditbegrænsninger, 2) kortsynethed (myopi), 3) forvridende skatter/usikkerhed.',
+   hint:'Rationelle agenter internaliserer statens intertemporale budgetbetingelse'},
+
+  {topic:'makro2',type:'mc',
+   q:'Hvad er Lucas\' resultat vedr. velfærdstab ved konjunkturudsving?',
+   options:['Tabet svarer til ca. 5% af forbruget','Tabet er enormt og begrunder aktiv stabiliseringspolitik','Tabet er ekstremt lille – ca. 0,05% af forbruget','Tabet afhænger udelukkende af rentens niveau'],
+   correct:2,hint:'Kritiseret: repræsentativ husholdning skjuler fordelingseffekter'},
+
+  {topic:'makro2',type:'mc',
+   q:'Hvad er den finanspolitiske multiplikator i en åben økonomi med skat?',
+   options:['1 / (1 − mpc)','1 / (1 − mpc(1−t) + m)','mpc / (1 − mpc)','1 / (mpc + t)'],
+   correct:1,hint:'"Lækager": skattesats t og importtilbøjelighed m sænker multiplikatoren'},
+
+  {topic:'makro2',type:'text',
+   q:'Hvad er likviditetsfælden (Zero Lower Bound), og hvorfor er den problematisk?',
+   a:'Når den nominelle rente er 0%, kan centralbanken ikke sænke den yderligere via konventionel pengepolitik. Falder inflationen, stiger realrenten automatisk og reducerer efterspørgslen — AD-kurven kan ændre hældning.',
+   hint:'ZLB → pengepolitik mister sin kraft'},
+
+  {topic:'makro2',type:'mc',
+   q:'Hvad sker der med output og inflation ved et positivt efterspørgselsstød på kort sigt?',
+   options:['Output stiger, inflation falder','Begge falder','AD-kurven skifter venstre; output og inflation falder','AD-kurven skifter højre; output og inflation stiger'],
+   correct:3,hint:'Stød → AD rykker → bevægelse langs SRAS'},
+
+  {topic:'makro2',type:'text',
+   q:'Hvad er hysteresis på arbejdsmarkedet?',
+   a:'Midlertidige negative stød får permanent effekt på den strukturelle ledighed. Ledige mister færdigheder og arbejdsmarkedstilknytning over tid ("scarring"), så den naturlige ledighed stiger varigt.',
+   hint:'Midlertidigt stød → permanent strukturel skade'},
+
+  {topic:'makro2',type:'mc',
+   q:'Hvad er shoe-leather costs?',
+   options:['Omkostninger ved at printe nye prislister ved inflation','Tid og besvær ved konstant at minimere kontantbeholdninger når inflation udhuler købekraften','Tab ved at holde obligationer i perioder med stigende rente','Effektivitetstab fra progressive skatter'],
+   correct:1,hint:'Inflation → folk holder mindre kontant → kostbar porteføljestyring'},
+
+  // ── MIKRO II ──────────────────────────────────────────
+  {topic:'mikro2',type:'text',
+   q:'Hvad er Marginal Factor Cost (MFC) for en monopsonist, og hvad adskiller den fra lønnen?',
+   a:'MFC(x) = w_s(x) + w_s\'(x)·x. Den første del er lønnen til den marginale arbejder. Den anden del er lønstigningen der nu skal betales til alle eksisterende arbejdere. MFC > w_s fordi monopsonisten internaliserer løneffekten.',
+   hint:'Monopsonisten ved at ansætte én mere hæver lønnen for alle'},
+
+  {topic:'mikro2',type:'mc',
+   q:'Hvad er profitmaksimeringsvilkåret for en monopsonist?',
+   options:['MP(x) = w_s(x) — sæt marginalprodukt lig markedsløn','MP(x) = MFC(x) = w_s(x) + w_s\'(x)x','MR(x) = w_s(x)','MP(x) = 0'],
+   correct:1,hint:'Monopsonisten ansætter færre end det socialt effektive niveau'},
+
+  {topic:'mikro2',type:'text',
+   q:'Hvad er principal-agent problemet, og hvad er løsningen?',
+   a:'Principalen kan ikke observere agentens indsats (skjult handling). Agenten kan agere i egeninteresse. Løsning: incitamentskontrakter der binder agentens aflønning til observerbare resultater, under hensyntagen til deltagelsesbetingelsen.',
+   hint:'Informationsasymmetri → moral hazard → incitamentsdesign'},
+
+  {topic:'mikro2',type:'mc',
+   q:'Hvad er førstegrads prisdiskrimination?',
+   options:['Mængderabat baseret på købt volumen','Gruppering af forbrugere i segmenter med forskellig pris','Perfekt prisdiskrimination: alle betaler præcis deres betalingsvillighed — intet forbrugeroverskud','Selvsortering via produktbundter af forskellig kvalitet'],
+   correct:2,hint:'Kræver fuld information om alle forbrugeres betalingsvillighed'},
+
+  {topic:'mikro2',type:'text',
+   q:'Hvad er andengrads prisdiskrimination, og hvad er selvsorteringsproblemet?',
+   a:'Virksomheden tilbyder produktbundter (f.eks. iPhone/iPhone Pro) rettet mod forbrugere med forskellig betalingsvillighed — de sorterer sig selv. Problemet: er den billige pakke for god, vælger rige forbrugere den frem for den dyre.',
+   hint:'Ufuldstændig information → screening via menudesign'},
+
+  {topic:'mikro2',type:'mc',
+   q:'Hvad kræver tredjegrads prisdiskrimination?',
+   options:['Fuld information om alle forbrugeres præferencer','Markedsmagt (P > MC), evne til at opdele forbrugere i grupper, og ingen arbitrage','Kun at virksomheden er et monopol','At produktet er et offentligt gode'],
+   correct:1,hint:'Biografer, fly og studierabatter er klassiske eksempler'},
+
+  {topic:'mikro2',type:'text',
+   q:'Hvad er betingelsen for samfundsmæssigt optimalt output under monopol, og hvad er dødvægtstabet?',
+   a:'Socialt optimum: P = MC. Monopolisten sætter MR = MC, men MR < P, så P > MC i ligevægt. Dødvægtstabet er trianglen af urealiserede gevinster fra handel for enheder hvor P > MC men produceres ikke.',
+   hint:'Monopolisten begrænser output for at hæve prisen'},
+
+  {topic:'mikro2',type:'mc',
+   q:'Hvad er en deltagelsesbetingelse (Participation Constraint) i en kontrakt?',
+   options:['Agentens indsats skal overstige et minimum','Principalen maksimerer profit uden hensyn til agenten','Agentens nytte ved at acceptere kontrakten skal mindst matche reservationsnytten ū','Agenten skal modtage samme løn som markedslønnen'],
+   correct:2,hint:'Uden opfyldt PC afviser agenten kontrakten'},
+
+  {topic:'mikro2',type:'mc',
+   q:'Hvad er det kompetitive beskæftigelsesniveau på et arbejdsmarked?',
+   options:['MP(x) = MFC(x)','MP(x) = w_s(x) — marginalprodukt lig udbudskurven','MR = MC','Udbudt arbejdskraft = efterspurgt arbejdskraft til vilkårlig løn'],
+   correct:1,hint:'Under konkurrence er der ingen monopsonimagt — løn = marginalprodukt'},
+
+  {topic:'mikro2',type:'text',
+   q:'Hvad påvirker et styksubsidie (s) på monopolistens adfærd?',
+   a:'Monopolisten sætter nu MR(x) + s = MC(x). Subsidiet øger effektiv marginalindtjening og skubber output mod det sociale optimum. Et korrekt kalibreret subsidie kan eliminere dødvægtstabet fuldstændigt.',
+   hint:'Subsidie ≈ korrektiv for markedssvigt'},
+
+  // ── ØKONOMETRI I ──────────────────────────────────────
+  {topic:'okonometri',type:'text',
+   q:'Hvad er Gauss-Markov teoremet?',
+   a:'Under MLR.1–MLR.5 er OLS-estimatoren BLUE: Best Linear Unbiased Estimator — den har den mindste varians blandt alle lineære, middelrette estimatorer. MLR.6 (normalitet) er ikke nødvendig for BLUE, men kræves for præcis inferens i små stikprøver.',
+   hint:'BLUE kræver MLR.1-5; MVUE kræver MLR.1-6'},
+
+  {topic:'okonometri',type:'mc',
+   q:'Hvad betyder det at en OLS-estimator er middelret (unbiased)?',
+   options:['Estimatoren nærmer sig den sande værdi ved n → ∞','E(β̂) = β: estimatoren rammer den sande parameter i gennemsnit','Estimatoren har den mindste varians blandt alle estimatorer','Estimatoren er ukorreleret med fejlleddet u'],
+   correct:1,hint:'Middelrethed ≠ konsistens — det er en egenskab i endelige stikprøver'},
+
+  {topic:'okonometri',type:'text',
+   q:'Hvad er konsekvensen af heteroskedasticitet for OLS?',
+   a:'OLS-estimatoren er stadig middelret (MLR.4 er intakt), men standardfejlene er ugyldige fordi MLR.5 er brudt. T-tests og F-tests holder ikke. Løsning: robuste (Huber-White) standardfejl.',
+   hint:'Hetero bryder MLR.5 men ikke MLR.4'},
+
+  {topic:'okonometri',type:'mc',
+   q:'Hvad tester en F-test i OLS-regression?',
+   options:['Om en enkelt koefficient er signifikant forskellig fra nul','Om modellen er heteroskedastisk','Om en gruppe af parametre samlet er lig nul (joint significance)','Om fejlleddet er normalfordelt'],
+   correct:2,hint:'F = (SSRr − SSRur)/q ÷ SSRur/(n−k−1)'},
+
+  {topic:'okonometri',type:'text',
+   q:'Hvad er Instrumental Variables (IV), og hvad kræves af et gyldigt instrument?',
+   a:'IV bruges når en forklarende variabel er endogen — korreleret med fejlleddet u (pga. udeladte variable, målefejl eller simultanitet). Et gyldigt instrument Z skal være: 1) relevant: Cov(Z,X) ≠ 0, og 2) eksogent: Cov(Z,u) = 0.',
+   hint:'Eksogenitetskravet kan typisk ikke testes statistisk'},
+
+  {topic:'okonometri',type:'mc',
+   q:'Hvad er "attenuation bias" fra klassisk målefejl i en forklarende variabel?',
+   options:['Koefficienten oversættes mod uendelig','Koefficienten trækkes mod 0 — effekten undervurderes systematisk','Standardfejlen stiger drastisk og t-statistikken eksploderer','R² falder til nul og modellen er ubrugelig'],
+   correct:1,hint:'Støj i x "fortynder" signalet — IV kan korrigere'},
+
+  {topic:'okonometri',type:'text',
+   q:'Hvad er Difference-in-Differences (DiD), og hvad er paralleltrend-antagelsen?',
+   a:'DiD estimerer kausaleffekten af et tiltag ved at sammenligne ændringen over tid for behandlings- og kontrolgruppe. Kræver paralleltrend: uden tiltaget ville de to grupper have fulgt samme trend. Antagelsen er ikke testbar direkte men kan underbygges med pre-trend tests.',
+   hint:'DiD = (behandling efter−før) − (kontrol efter−før)'},
+
+  {topic:'okonometri',type:'mc',
+   q:'Hvad er Fixed Effects-estimation ved paneldata?',
+   options:['Man antager at individeffekter er ukorrelerede med X','Man fjerner tids-konstant uobserveret heterogenitet via within-transformation','Man pool\'er alle observationer og ignorerer individspecifikke effekter','Man bruger GLS til at korrigere for autokorrelation'],
+   correct:1,hint:'Within: trækker individets gennemsnit fra — eliminerer ai'},
+
+  {topic:'okonometri',type:'mc',
+   q:'Hvad er MLR.4-antagelsen, og hvad sker der hvis den brydes?',
+   options:['Fejlleddet er normalfordelt; brud giver upræcise t-tests','E(u|x₁,...,xₖ) = 0; brud gør OLS ikke middelret','Variansen er konstant; brud giver ugyldige standardfejl','Ingen multikollinearitet; brud gør beregning umulig'],
+   correct:1,hint:'MLR.4 er kernen i OLS\'s middelrethed'},
+
+  {topic:'okonometri',type:'text',
+   q:'Hvad er en dummy-variabel, og hvordan fortolkes dens koefficient?',
+   a:'En dummy-variabel antager 0 eller 1 for at indikere en kategori. I modellen løn = β₀ + δ₀·kvinde + β₁·udd + u er δ₀ den gennemsnitlige lønforskel mellem kvinder og mænd ved samme uddannelsesniveau — et skift i interceptet.',
+   hint:'Koefficienten angiver skiftet ift. referencegruppen'},
+
+  {topic:'okonometri',type:'mc',
+   q:'Hvad er problemet med Linear Probability Model (LPM)?',
+   options:['Koefficienter kan ikke fortolkes som marginaleffekter','Modellen kan ikke estimeres med OLS','Forudsagte sandsynligheder kan blive større end 1 eller mindre end 0','Modellen kræver normalfordelte fejlled'],
+   correct:2,hint:'Alternativt: logit eller probit giver sandsynligheder i [0,1]'},
+
+  {topic:'okonometri',type:'text',
+   q:'Hvad er justeret R² (Adjusted R²), og hvornår er det nyttigt?',
+   a:'Justeret R² straffer modellen for ekstra variable der ikke bidrager til forklaringskraften. Almindelig R² stiger altid ved tilføjelse af variable. Justeret R² kan falde, hvilket gør det nyttigt til modelsammenligninger med forskelligt antal variable.',
+   hint:'Justeret R² = 1 − (SSR/(n−k−1)) / (SST/(n−1))'},
+
+  // ── VIDENSKABSTEORI ───────────────────────────────────
+  {topic:'videnskab',type:'text',
+   q:'Hvad er verificeringsprincippet, og hvorfor er det selvmodsigende?',
+   a:'Et udsagn har kun videnskabelig mening hvis det kan efterprøves empirisk. Det er selvmodsigende fordi selve princippet ikke kan verificeres empirisk — det dømmer sig selv som meningsløst.',
+   hint:'Logisk positivisme — Wienkredsen'},
+
+  {topic:'videnskab',type:'mc',
+   q:'Hvad går Duhem-Quine problemet ud på?',
+   options:['Man kan kun falsificere teorier, aldrig verificere dem','Man tester aldrig én hypotese isoleret, men altid et bundt af teorier og hjælpeantagelser','Induktion er logisk ugyldig fordi fremtiden ikke ligner fortiden','Normativ og positiv økonomi kan ikke adskilles'],
+   correct:1,hint:'Fejler testen, ved man ikke hvad i bundtet der er galt'},
+
+  {topic:'videnskab',type:'text',
+   q:'Hvad er Poppers demarkationskriterium og hans asymmetri?',
+   a:'Demarkation: videnskab adskilles fra ikke-videnskab ved falsificerbarhed — teorier skal "stikke nakken frem". Asymmetri: ingen mængde observationer verificerer endeligt en teori, men én modstridende observation er nok til at falsificere.',
+   hint:'Svanens farve: aldrig bevist hvid, men én sort modbeviser det'},
+
+  {topic:'videnskab',type:'mc',
+   q:'Hvad illustrerer Russells høne?',
+   options:['At induktion kan begrunde universelle naturlove','Faren ved induktion: fortidige mønstre giver ingen logisk garanti for fremtiden','At falsificerbarhed er umulig i praksis','At normative udsagn kan testes empirisk'],
+   correct:1,hint:'Hønen fodres hver dag — helt indtil slagtedagen'},
+
+  {topic:'videnskab',type:'text',
+   q:'Hvad er Friedmans "as-if" metodologi (instrumentalisme)?',
+   a:'Antagelsernes realisme er irrelevant. Det afgørende er om modellen forudsiger præcist. Man agerer "som om" antagelserne er sande hvis resultaterne holder. Eksempel: faldformel antager vakuum men virker "godt nok" i praksis.',
+   hint:'Kontrast til realisme: kun forudsigelseskraft tæller'},
+
+  {topic:'videnskab',type:'mc',
+   q:'Hvad er Lucas-kritikken?',
+   options:['OLS er inkonsistent ved endogene variable','Makroøkonomiske modeller baseret på historiske mønstre fejler når politikken ændres, fordi agenter ændrer forventninger og adfærd','Inflationsmål er normative og ikke videnskabelige','Kausalitet kan ikke identificeres uden randomiserede forsøg'],
+   correct:1,hint:'Strukturelle parametre er ikke policy-invariante'},
+
+  {topic:'videnskab',type:'text',
+   q:'Hvad er Revealed Preference (Samuelson)?',
+   a:'Da vi ikke kan måle indre nytte direkte (positivistisk kritik af kardinal nytte), observerer vi i stedet faktiske valg. Præferencer "afsløres" gennem observerbar adfærd — uden at postulere en nytteskala.',
+   hint:'Valg frem for introspektive nyttebegreber'},
+
+  {topic:'videnskab',type:'mc',
+   q:'Hvad er forskellen på positiv og normativ økonomi?',
+   options:['Positiv beskriver fremtiden; normativ beskriver fortiden','Positiv siger hvordan verden er (fakta); normativ siger hvordan den bør være (værdier)','Positiv er falsificerbar; normativ er verifierbar','Positiv bruger matematik; normativ bruger filosofi'],
+   correct:1,hint:'"Skatten bør sænkes" er normativt; "skatten er 22%" er positivt'},
+
+  {topic:'videnskab',type:'text',
+   q:'Hvad er korroboration hos Popper?',
+   a:'En teori er korroboreret hvis den har overlevet gentagne og strenge forsøg på falsifikation. Det betyder ikke at den er "sand" — blot at den har vist sin styrke hidtil. Korroboration er gradsbestemt og midlertidig.',
+   hint:'Overlevet mange tests ≠ endeligt verificeret'},
+
+  {topic:'videnskab',type:'mc',
+   q:'Hvad er induktionsproblemet (Hume)?',
+   options:['At kausalitet ikke kan observeres direkte — kun korrelation','At vi ikke logisk kan begrunde at fortidige mønstre vil gentage sig i fremtiden','At teorier aldrig kan falsificeres i praksis pga. hjælpeantagelser','At normative og positive udsagn i praksis er identiske'],
+   correct:1,hint:'Solen er stået op hver dag — ingen logisk garanti for i morgen'},
 ];
 
-function makeADASGraph() {
-  return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:180px">
-    <defs>
-      <marker id="ah" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L6,3 L0,6 Z" fill="#555"/>
-      </marker>
-    </defs>
-    <line x1="30" y1="10" x2="30" y2="190" stroke="#333" stroke-width="1.5" marker-end="url(#ah)"/>
-    <line x1="20" y1="180" x2="290" y2="180" stroke="#333" stroke-width="1.5" marker-end="url(#ah)"/>
-    <text x="14" y="8" fill="#666" font-size="9" font-family="DM Mono,monospace">P</text>
-    <text x="285" y="192" fill="#666" font-size="9" font-family="DM Mono,monospace">Y</text>
-    <!-- LRAS -->
-    <line x1="170" y1="20" x2="170" y2="175" stroke="#c8f55a" stroke-width="2" stroke-dasharray="none"/>
-    <text x="172" y="16" fill="#c8f55a" font-size="9" font-family="DM Sans,sans-serif">LRAS</text>
-    <!-- SRAS -->
-    <line x1="60" y1="175" x2="280" y2="60" stroke="#f5a623" stroke-width="1.8"/>
-    <text x="262" y="56" fill="#f5a623" font-size="9" font-family="DM Sans,sans-serif">SRAS</text>
-    <!-- AD -->
-    <line x1="60" y1="60" x2="270" y2="170" stroke="#7b9fff" stroke-width="1.8"/>
-    <text x="250" y="168" fill="#7b9fff" font-size="9" font-family="DM Sans,sans-serif">AD</text>
-    <!-- Point A -->
-    <circle cx="170" cy="115" r="5" fill="#c8f55a"/>
-    <text x="176" y="114" fill="#c8f55a" font-size="11" font-family="DM Serif Display,serif" font-style="italic">A</text>
-  </svg>`;
-}
+// ── STATE ────────────────────────────────────────────────
+let deck=[],idx=0,flipped=false,mcAnswered=false;
+let sessionGot=0,sessionAlmost=0,sessionHard=0;
+let totalXP=parseInt(localStorage.getItem('eq_xp')||'0');
+let totalCards=parseInt(localStorage.getItem('eq_cards')||'0');
+let totalGot=parseInt(localStorage.getItem('eq_got')||'0');
+let streak=parseInt(localStorage.getItem('eq_streak')||'0');
+let currentTopic='all';
 
-function makeMonopolyGraph() {
-  return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:180px">
-    <defs>
-      <marker id="ah2" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L6,3 L0,6 Z" fill="#555"/>
-      </marker>
-    </defs>
-    <line x1="30" y1="10" x2="30" y2="190" stroke="#333" stroke-width="1.5" marker-end="url(#ah2)"/>
-    <line x1="20" y1="180" x2="290" y2="180" stroke="#333" stroke-width="1.5" marker-end="url(#ah2)"/>
-    <text x="14" y="8" fill="#666" font-size="9" font-family="DM Mono,monospace">P</text>
-    <text x="285" y="192" fill="#666" font-size="9" font-family="DM Mono,monospace">Q</text>
-    <!-- MC = flat -->
-    <line x1="40" y1="140" x2="270" y2="140" stroke="#c8f55a" stroke-width="1.8"/>
-    <text x="250" y="136" fill="#c8f55a" font-size="9" font-family="DM Sans,sans-serif">MC</text>
-    <!-- Demand -->
-    <line x1="50" y1="40" x2="260" y2="175" stroke="#7b9fff" stroke-width="1.8"/>
-    <text x="240" y="172" fill="#7b9fff" font-size="9" font-family="DM Sans,sans-serif">D</text>
-    <!-- MR -->
-    <line x1="50" y1="40" x2="155" y2="175" stroke="#ff9fff" stroke-width="1.8"/>
-    <text x="136" y="172" fill="#ff9fff" font-size="9" font-family="DM Sans,sans-serif">MR</text>
-    <!-- Monopoly Qm -->
-    <line x1="103" y1="140" x2="103" y2="180" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
-    <!-- Competitive Qc -->
-    <line x1="176" y1="140" x2="176" y2="180" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
-    <!-- Pm line -->
-    <line x1="30" y1="83" x2="103" y2="83" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
-    <!-- DWL triangle fill -->
-    <polygon points="103,83 176,140 103,140" fill="rgba(255,107,107,0.25)" stroke="#ff6b6b" stroke-width="1"/>
-    <text x="90" y="178" fill="#888" font-size="8" font-family="DM Mono,monospace">Qm</text>
-    <text x="163" y="178" fill="#888" font-size="8" font-family="DM Mono,monospace">Qc</text>
-    <text x="33" y="86" fill="#888" font-size="8" font-family="DM Mono,monospace">Pm</text>
-    <text x="33" y="143" fill="#888" font-size="8" font-family="DM Mono,monospace">Pc</text>
-    <text x="118" y="122" fill="#ff6b6b" font-size="8" font-family="DM Sans,sans-serif">DWL</text>
-  </svg>`;
-}
-
-// State
-let deck = [], idx = 0, flipped = false;
-let sessionGot = 0, sessionAlmost = 0, sessionHard = 0;
-let totalXP = parseInt(localStorage.getItem('eq_xp') || '0');
-let totalCards = parseInt(localStorage.getItem('eq_cards') || '0');
-let totalGot = parseInt(localStorage.getItem('eq_got') || '0');
-let streak = parseInt(localStorage.getItem('eq_streak') || '0');
-let currentTopic = 'all';
-
-function updateHomeStats() {
-  document.getElementById('total-xp').textContent = totalXP;
-  document.getElementById('cards-done').textContent = totalCards;
-  const mastery = totalCards > 0 ? Math.round((totalGot / totalCards) * 100) : 0;
-  document.getElementById('mastery-pct').textContent = mastery + '%';
-  document.getElementById('streak-num').textContent = streak;
-  document.getElementById('xp-badge').textContent = totalXP + ' XP';
-  const topics = ['macro','micro','maths','finance'];
-  topics.forEach(t => {
-    document.getElementById('count-' + t).textContent = CARDS.filter(c => c.topic === t).length + ' cards';
+function updateHomeStats(){
+  document.getElementById('total-xp').textContent=totalXP;
+  document.getElementById('cards-done').textContent=totalCards;
+  const m=totalCards>0?Math.round((totalGot/totalCards)*100):0;
+  document.getElementById('mastery-pct').textContent=m+'%';
+  document.getElementById('streak-num').textContent=streak;
+  document.getElementById('xp-badge').textContent=totalXP+' XP';
+  ['makro2','mikro2','okonometri','videnskab'].forEach(t=>{
+    document.getElementById('count-'+t).textContent=CARDS.filter(c=>c.topic===t).length+' kort';
   });
-  document.getElementById('count-all').textContent = CARDS.length + ' cards';
+  document.getElementById('count-all').textContent=CARDS.length+' kort';
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function goHome(){updateHomeStats();showScreen('home');}
+
+function startStudy(topic){
+  currentTopic=topic;idx=0;flipped=false;mcAnswered=false;
+  sessionGot=0;sessionAlmost=0;sessionHard=0;
+  const filtered=topic==='all'?CARDS:CARDS.filter(c=>c.topic===topic);
+  deck=shuffle(filtered).slice(0,12);
+  showScreen('study');renderCard();
 }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+const LABELS={makro2:'Makro II',mikro2:'Mikro II',okonometri:'Økonometri I',videnskab:'Videnskabsteori'};
 
-function goHome() {
-  updateHomeStats();
-  showScreen('home');
-}
-
-function startStudy(topic) {
-  currentTopic = topic;
-  idx = 0; flipped = false; sessionGot = 0; sessionAlmost = 0; sessionHard = 0;
-  const filtered = topic === 'all' ? CARDS : CARDS.filter(c => c.topic === topic);
-  deck = shuffle(filtered).slice(0, 10);
-  showScreen('study');
-  renderCard();
-}
-
-function renderCard() {
-  if (idx >= deck.length) { showDone(); return; }
-  const c = deck[idx];
-  flipped = false;
+function renderCard(){
+  if(idx>=deck.length){showDone();return;}
+  const c=deck[idx];flipped=false;mcAnswered=false;
   document.getElementById('card-inner').classList.remove('flipped');
-  document.getElementById('study-badge').textContent = c.topic;
-  document.getElementById('card-q').textContent = c.q;
-  document.getElementById('tap-cue').classList.remove('hidden');
-  document.getElementById('rating-btns').classList.add('hidden');
+  document.getElementById('study-badge').textContent=LABELS[c.topic]||c.topic;
+  document.getElementById('card-q').textContent=c.q;
+  document.getElementById('card-back-content').innerHTML='<div class="card-a">'+c.a+'</div>';
+  document.getElementById('card-hint-el').textContent='💡 '+c.hint;
+  const pct=Math.round((idx/deck.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('card-counter').textContent=(idx+1)+'/'+deck.length;
+  const isMC=c.type==='mc';
+  document.getElementById('mc-options').classList.toggle('hidden',!isMC);
+  document.getElementById('mc-next').classList.add('hidden');
+  document.getElementById('tap-cue').classList.toggle('hidden',isMC);
+  document.getElementById('rating-area').classList.toggle('hidden',isMC);
   document.getElementById('rating-label').classList.add('hidden');
-
-  // Back content
-  const backContent = document.getElementById('card-back-content');
-  if (c.type === 'graph') {
-    let graphHtml = '';
-    if (c.graphType === 'ad-as') graphHtml = makeADASGraph();
-    else if (c.graphType === 'monopoly') graphHtml = makeMonopolyGraph();
-    backContent.innerHTML = `<div class="graph-container">${graphHtml}</div><div class="card-a">${c.a}</div>`;
-  } else {
-    backContent.innerHTML = `<div class="card-a">${c.a}</div>`;
-  }
-
-  // Front graph
-  const front = document.getElementById('card-front');
-  const existingGraph = front.querySelector('.graph-container');
-  if (existingGraph) existingGraph.remove();
-  if (c.type === 'graph') {
-    let graphHtml = '';
-    if (c.graphType === 'ad-as') graphHtml = makeADASGraph();
-    else if (c.graphType === 'monopoly') graphHtml = makeMonopolyGraph();
-    const gc = document.createElement('div');
-    gc.className = 'graph-container';
-    gc.innerHTML = graphHtml;
-    front.insertBefore(gc, front.querySelector('.card-q'));
-    document.getElementById('card-q').style.fontSize = '15px';
-  } else {
-    document.getElementById('card-q').style.fontSize = '';
-  }
-
-  document.getElementById('card-hint-el').textContent = '💡 ' + c.hint;
-  const pct = Math.round((idx / deck.length) * 100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('card-counter').textContent = (idx+1) + '/' + deck.length;
+  document.getElementById('rating-btns').classList.add('hidden');
+  if(isMC)renderMCOptions(c);
 }
 
-function flipCard() {
-  if (flipped) return;
-  flipped = true;
+function handleFrontClick(){if(deck[idx].type==='mc')return;flipCard();}
+
+function flipCard(){
+  if(flipped)return;flipped=true;
   document.getElementById('card-inner').classList.add('flipped');
   document.getElementById('tap-cue').classList.add('hidden');
-  document.getElementById('rating-btns').classList.remove('hidden');
   document.getElementById('rating-label').classList.remove('hidden');
+  document.getElementById('rating-btns').classList.remove('hidden');
 }
 
-function rate(level) {
-  let xpGain = 0;
-  if (level === 'easy') { xpGain = 10; sessionGot++; totalGot++; }
-  else if (level === 'medium') { xpGain = 5; sessionAlmost++; }
-  else { xpGain = 2; sessionHard++; }
-  totalXP += xpGain;
-  totalCards++;
-  localStorage.setItem('eq_xp', totalXP);
-  localStorage.setItem('eq_cards', totalCards);
-  localStorage.setItem('eq_got', totalGot);
-  idx++;
-  renderCard();
+function renderMCOptions(c){
+  const container=document.getElementById('mc-options');
+  container.innerHTML='';
+  shuffle(c.options.map((text,i)=>({text,i}))).forEach(({text,i})=>{
+    const btn=document.createElement('button');
+    btn.className='mc-btn';btn.textContent=text;btn.dataset.idx=i;
+    btn.onclick=()=>handleMCAnswer(i,c.correct);
+    container.appendChild(btn);
+  });
 }
 
-function showDone() {
-  const total = sessionGot + sessionAlmost + sessionHard;
-  const pct = total > 0 ? Math.round((sessionGot / total) * 100) : 0;
-  document.getElementById('d-got').textContent = sessionGot;
-  document.getElementById('d-almost').textContent = sessionAlmost;
-  document.getElementById('d-hard').textContent = sessionHard;
-  document.getElementById('done-sub').textContent = pct + '% mastery this session. ' + (pct >= 80 ? 'Excellent.' : pct >= 50 ? 'Getting there.' : 'Keep drilling — it compounds.');
-  streak++;
-  localStorage.setItem('eq_streak', streak);
+function handleMCAnswer(chosen,correct){
+  if(mcAnswered)return;mcAnswered=true;
+  document.querySelectorAll('.mc-btn').forEach(btn=>{
+    btn.disabled=true;
+    const i=parseInt(btn.dataset.idx);
+    if(i===correct)btn.classList.add('reveal-correct');
+    if(i===chosen&&chosen!==correct)btn.classList.add('wrong');
+    if(i===chosen&&chosen===correct)btn.classList.add('correct');
+  });
+  const xpGain=chosen===correct?10:2;
+  if(chosen===correct){sessionGot++;totalGot++;}else sessionHard++;
+  totalXP+=xpGain;totalCards++;
+  localStorage.setItem('eq_xp',totalXP);
+  localStorage.setItem('eq_cards',totalCards);
+  localStorage.setItem('eq_got',totalGot);
+  document.getElementById('mc-next').classList.remove('hidden');
+}
+
+function nextCard(){idx++;renderCard();}
+
+function rate(level){
+  let xp=0;
+  if(level==='easy'){xp=10;sessionGot++;totalGot++;}
+  else if(level==='medium'){xp=5;sessionAlmost++;}
+  else{xp=2;sessionHard++;}
+  totalXP+=xp;totalCards++;
+  localStorage.setItem('eq_xp',totalXP);
+  localStorage.setItem('eq_cards',totalCards);
+  localStorage.setItem('eq_got',totalGot);
+  idx++;renderCard();
+}
+
+function showDone(){
+  const total=sessionGot+sessionAlmost+sessionHard;
+  const pct=total>0?Math.round((sessionGot/total)*100):0;
+  document.getElementById('d-got').textContent=sessionGot;
+  document.getElementById('d-almost').textContent=sessionAlmost;
+  document.getElementById('d-hard').textContent=sessionHard;
+  document.getElementById('done-sub').textContent=
+    pct+'% mestring denne session. '+
+    (pct>=80?'Fremragende arbejde.':pct>=50?'Du er på rette vej.':'Bliv ved – det samler sig.');
+  streak++;localStorage.setItem('eq_streak',streak);
   showScreen('done');
 }
 
-function restartSession() { startStudy(currentTopic); }
-
+function restartSession(){startStudy(currentTopic);}
 updateHomeStats();
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
