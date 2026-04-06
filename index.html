@@ -2,7 +2,7 @@
 <html lang="da">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Econiq">
@@ -10,109 +10,11 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Econiq</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script>
-MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']},startup:{typeset:false}};
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
-<style>
-:root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text:#f0ede6;--text2:#888;--text3:#555;--accent:#c8f55a;--accent-dim:rgba(200,245,90,0.12);--red:#ff6b6b;--amber:#f5a623;--green:#c8f55a;--serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--r:14px;--r-lg:20px}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);overflow:hidden}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s ease}
-.screen.active{opacity:1;pointer-events:all}
-#home{justify-content:space-between}
-.home-header{padding:56px 28px 0}
-.logo{font-family:var(--serif);font-size:36px;letter-spacing:-.5px}
-.logo span{color:var(--accent)}
-.tagline{font-size:13px;color:var(--text3);margin-top:4px;font-weight:300;letter-spacing:.3px}
-.stats-strip{display:flex;gap:10px;padding:24px 28px 0}
-.stat-box{flex:1;background:var(--surface);border:.5px solid var(--border);border-radius:var(--r);padding:14px}
-.stat-box .val{font-family:var(--mono);font-size:22px;font-weight:500}
-.stat-box .lbl{font-size:11px;color:var(--text3);margin-top:2px}
-.topic-grid{padding:20px 28px 0;flex:1;overflow-y:auto}
-.topic-grid-label{font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
-.topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.topic-card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
-.topic-card:active{transform:scale(.98)}
-.topic-card.all{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}
-.topic-card .icon{font-size:22px;margin-bottom:10px}
-.topic-card.all .icon{margin:0}
-.topic-card .name{font-size:14px;font-weight:500}
-.topic-card .count{font-size:11px;color:var(--text3);margin-top:3px}
-.topic-card.all .name{font-size:16px}
-.topic-card:active{border-color:var(--border2);background:var(--surface2)}
-.home-footer{padding:16px 28px 40px}
-.streak-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:.5px solid var(--border);border-radius:40px;padding:10px 16px}
-.streak-fire{font-size:18px}
-.streak-text{font-size:13px;color:var(--text2);flex:1}
-.streak-text strong{color:var(--text);font-weight:500}
-.xp-badge{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-dim);padding:3px 10px;border-radius:20px}
-#study{background:var(--bg)}
-.study-header{display:flex;align-items:center;gap:12px;padding:56px 20px 16px;flex-shrink:0}
-.back-btn{width:36px;height:36px;border-radius:50%;border:.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
-.back-btn:active{transform:scale(.95)}
-.progress-track{flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .5s ease}
-.card-counter{font-family:var(--mono);font-size:12px;color:var(--text3);white-space:nowrap}
-.card-area{flex:1;padding:8px 20px 0;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-.topic-badge{display:inline-flex;align-items:center;background:var(--surface);border:.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--text3);margin-bottom:12px;align-self:flex-start;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
-.card-scene{flex:1;perspective:1200px;margin-bottom:10px;min-height:0}
-.card-inner{width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);cursor:pointer}
-.card-inner.flipped{transform:rotateY(180deg)}
-.card-face{position:absolute;inset:0;backface-visibility:hidden;background:var(--surface);border:.5px solid var(--border);border-radius:var(--r-lg);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px 22px;text-align:center;overflow-y:auto}
-.card-back{transform:rotateY(180deg);background:var(--surface2);justify-content:flex-start;padding-top:24px}
-.card-label{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;flex-shrink:0}
-.card-q{font-family:var(--serif);font-size:19px;line-height:1.45;font-style:italic}
-.card-a{font-size:13px;line-height:1.8;text-align:left;width:100%;margin-bottom:12px}
-.card-hint{font-size:11px;color:var(--text3);border-top:.5px solid var(--border);padding-top:12px;width:100%;text-align:center;font-style:italic;flex-shrink:0;margin-top:auto}
-.tap-cue{font-size:11px;color:var(--text3);text-align:center;margin-bottom:4px;flex-shrink:0}
-.mc-options{display:flex;flex-direction:column;gap:8px;padding:0 20px 10px;flex-shrink:0}
-.mc-btn{background:var(--surface);border:.5px solid var(--border);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--text);cursor:pointer;text-align:left;font-family:var(--sans);line-height:1.5;transition:all .15s}
-.mc-btn:active{transform:scale(.99)}
-.mc-btn.correct{border-color:var(--green);background:rgba(200,245,90,.1);color:var(--green)}
-.mc-btn.wrong{border-color:var(--red);background:rgba(255,107,107,.1);color:var(--red)}
-.mc-btn.reveal-correct{border-color:var(--green);background:rgba(200,245,90,.07)}
-.mc-btn:disabled{cursor:default}
-.mc-next{margin:0 20px 10px;background:var(--surface2);border:.5px solid var(--border2);border-radius:var(--r);padding:13px;font-size:14px;color:var(--text2);cursor:pointer;font-family:var(--sans);flex-shrink:0}
-.mc-next:active{transform:scale(.98)}
-.rating-area{padding:0 20px 32px;flex-shrink:0}
-.rating-label{font-size:11px;color:var(--text3);text-align:center;margin-bottom:10px;letter-spacing:.5px}
-.rating-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.r-btn{border:.5px solid var(--border);background:var(--surface);border-radius:var(--r);padding:12px 6px;cursor:pointer;text-align:center;transition:all .15s;color:var(--text);font-family:var(--sans)}
-.r-btn:active{transform:scale(.97)}
-.r-btn .r-icon{font-size:18px;display:block;margin-bottom:4px}
-.r-btn .r-lbl{font-size:12px;color:var(--text2)}
-.r-btn.easy{border-color:rgba(200,245,90,.3)}
-.r-btn.medium{border-color:rgba(245,166,35,.3)}
-.r-btn.hard{border-color:rgba(255,107,107,.3)}
-.hidden{display:none!important}
-#done{justify-content:center;align-items:center;padding:28px}
-.done-icon{font-size:56px;margin-bottom:20px}
-.done-title{font-family:var(--serif);font-size:32px;margin-bottom:8px}
-.done-sub{font-size:14px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:32px;max-width:280px}
-.done-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;margin-bottom:32px}
-.done-stat{background:var(--surface);border:.5px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
-.done-stat .v{font-family:var(--mono);font-size:28px;font-weight:500}
-.done-stat .l{font-size:11px;color:var(--text3);margin-top:4px}
-.done-stat.g .v{color:var(--green)}
-.done-stat.a .v{color:var(--amber)}
-.done-stat.r .v{color:var(--red)}
-.done-btns{display:flex;flex-direction:column;gap:10px;width:100%}
-.btn-primary{background:var(--accent);color:#0a0a0a;border:none;border-radius:var(--r);padding:16px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--sans)}
-.btn-primary:active{transform:scale(.98);opacity:.9}
-.btn-secondary{background:var(--surface);color:var(--text2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;font-size:15px;cursor:pointer;font-family:var(--sans)}
-/* MathJax colour fix for dark bg */
-mjx-container{color:var(--text)!important}
-@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.screen.active .home-header{animation:slideUp .4s ease both}
-.screen.active .stats-strip{animation:slideUp .4s ease .05s both}
-.screen.active .topic-grid{animation:slideUp .4s ease .1s both}
-.screen.active .home-footer{animation:slideUp .4s ease .15s both}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- HOME -->
 <div class="screen active" id="home">
   <div class="home-header">
     <div class="logo">econ<span>iq</span></div>
@@ -157,41 +59,55 @@ mjx-container{color:var(--text)!important}
   </div>
 </div>
 
+<!-- STUDY -->
 <div class="screen" id="study">
   <div class="study-header">
     <div class="back-btn" onclick="goHome()">←</div>
     <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
     <div class="card-counter" id="card-counter">0/0</div>
   </div>
+
   <div class="card-area">
     <div class="topic-badge" id="study-badge">makro</div>
-    <div class="card-scene" id="card-scene">
+
+    <div class="card-scene">
       <div class="card-inner" id="card-inner">
-        <div class="card-face card-front" onclick="handleFrontClick()">
+
+        <div class="card-face card-front" id="card-front" onclick="handleFrontClick()">
           <div class="card-label">spørgsmål</div>
-          <div class="card-q" id="card-q">...</div>
+          <div id="front-graph" class="card-graph hidden"></div>
+          <div class="card-q" id="card-q"></div>
         </div>
+
         <div class="card-face card-back">
           <div class="card-label">svar</div>
-          <div id="card-back-content" style="width:100%"></div>
-          <div class="card-hint" id="card-hint-el"></div>
+          <div id="back-graph" class="card-graph hidden"></div>
+          <div class="card-a" id="card-a"></div>
+          <div class="card-hint" id="card-hint"></div>
         </div>
+
       </div>
     </div>
+
     <div class="tap-cue" id="tap-cue">tryk for at se svaret</div>
   </div>
+
+  <!-- MC options rendered here -->
   <div class="mc-options hidden" id="mc-options"></div>
   <button class="mc-next hidden" id="mc-next" onclick="nextCard()">Næste →</button>
+
+  <!-- Rating for text/graph cards -->
   <div class="rating-area" id="rating-area">
     <div class="rating-label hidden" id="rating-label">hvordan gik det?</div>
     <div class="rating-btns hidden" id="rating-btns">
-      <button class="r-btn hard" onclick="rate('hard')"><span class="r-icon">😓</span><span class="r-lbl">Igen</span></button>
+      <button class="r-btn hard"   onclick="rate('hard')">  <span class="r-icon">😓</span><span class="r-lbl">Igen</span></button>
       <button class="r-btn medium" onclick="rate('medium')"><span class="r-icon">🤔</span><span class="r-lbl">Næsten</span></button>
-      <button class="r-btn easy" onclick="rate('easy')"><span class="r-icon">✓</span><span class="r-lbl">Forstået</span></button>
+      <button class="r-btn easy"   onclick="rate('easy')">  <span class="r-icon">✓</span> <span class="r-lbl">Forstået</span></button>
     </div>
   </div>
 </div>
 
+<!-- DONE -->
 <div class="screen" id="done">
   <div class="done-icon">🎯</div>
   <div class="done-title">Session færdig.</div>
@@ -202,554 +118,21 @@ mjx-container{color:var(--text)!important}
     <div class="done-stat r"><div class="v" id="d-hard">0</div><div class="l">igen</div></div>
   </div>
   <div class="done-btns">
-    <button class="btn-primary" onclick="restartSession()">Kør igen</button>
+    <button class="btn-primary"   onclick="restartSession()">Kør igen</button>
     <button class="btn-secondary" onclick="goHome()">Tilbage til start</button>
   </div>
 </div>
 
+<!-- Load MathJax then app -->
 <script>
-const CARDS=[
-  // ── MAKRO II — VISUELLE KORT ──────────────────────────
-  {topic:'makro2',type:'graph',graph:'ad-as-shock',
-   q:'AD falder fra AD₁ til AD₂. Hvad sker der på kort sigt, og hvor ender økonomien på lang sigt?',
-   a:'På kort sigt: output falder og inflation falder — økonomen bevæger sig fra <em>A</em> til <em>B</em> langs SRAS. På lang sigt: lave lønkrav presser SRAS nedad, indtil output er tilbage ved $\\bar{y}$ — nu til lavere inflation.',
-   hint:'Kort sigt: bevægelse langs SRAS. Lang sigt: SRAS skifter'},
-
-  {topic:'makro2',type:'graph',graph:'phillips',
-   q:'Hvad forklarer skiftet fra punkt A til punkt B, og hvad sker der med SRPC på lang sigt?',
-   a:'A→B: inflation falder, ledighed stiger — bevægelse langs SRPC₁ (f.eks. ved stram pengepolitik). På lang sigt tilpasser inflationsforventningerne sig nedad, og SRPC₂ skifter nedad. Langsigtsligevægt er altid ved $u^*$.',
-   hint:'LR Phillips-kurven er lodret ved $u^*$ — ingen trade-off på lang sigt'},
-
-  {topic:'makro2',type:'graph',graph:'is-curve',
-   q:'IS-kurven skifter fra IS₁ til IS₂. Hvad kan have forårsaget dette, og hvad sker der med output ved uændret rente $r_0$?',
-   a:'IS-kurven skifter højre ved: øget offentligt forbrug $G$, skattelettelser, stigning i eksport eller forbrugertillid. Ved uændret rente $r_0$ stiger output fra $y_1$ til $y_2$. Multiplikatoreffekten bestemmer størrelsen af skiftet.',
-   hint:'IS skifter = ændring i autonom efterspørgsel'},
-
-  {topic:'makro2',type:'graph',graph:'tobins-q',
-   q:'Hvornår investerer virksomheden ifølge Tobin\'s $q$, og hvad er intuitionen bag $q = 1$ som ligevægt?',
-   a:'Investér når $q > 1$: markedsværdien af ny kapital overstiger genanskaffelsesomkostningen — det skaber værdi. Stop når $q < 1$: billigere at købe eksisterende kapital på markedet. Ligevægt: $q = 1$, hvor $V_t = K_t$.',
-   hint:'$q = V / (pK)$ — hæld af V-linjen vs. genanskaffelseslinjen'},
-
-  {topic:'makro2',type:'graph',graph:'zlb',
-   q:'Hvad er Zero Lower Bound-problemet, og hvorfor ændrer AD-kurvens egenskaber sig ved $i = 0$?',
-   a:'Normalt: lavere $\\pi$ → centralbanken sænker $i$ → lavere $r$ → højere efterspørgsel (AD falder normalt). Ved ZLB ($i = 0$) kan $i$ ikke falde mere. Falder $\\pi$ nu, stiger $r = i - \\pi$ automatisk → AD hælder nu anderledes, og selvforstærkende deflation er mulig.',
-   hint:'$r = i - \\pi$ — ved $i = 0$ styrer $\\pi$ alene $r$'},
-
-  // ── MAKRO II — TEKST/MC ───────────────────────────────
-  {topic:'makro2',type:'text',
-   q:'Hvad er Taylor-princippet?',
-   a:'Centralbanken hæver den nominelle rente med <em>mere</em> end stigningen i inflationen, så realrenten faktisk stiger og dæmper efterspørgslen. Taylor-reglen: $$i = r + \\pi + h(\\pi - \\pi^*)$$ hvor $h > 0$ er reaktionsparameteren.',
-   hint:'Hvis $i$ stiger præcis som $\\pi$, ændres $r = i - \\pi$ ikke'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad sker der på lang sigt, hvis finanspolitikken strammes permanent (lavere $G$)?',
-   options:['Output falder permanent under $\\bar{y}$','Inflationen stiger kompenserende','Sammensætningen af efterspørgsel ændres, men output forbliver $\\bar{y}$','Centralbanken hæver renten for at stabilisere'],
-   correct:2,hint:'Crowding-in: lavere $r$ → højere privat $I$ erstatter lavere $G$'},
-
-  {topic:'makro2',type:'text',
-   q:'Hvad er den forventningsudvidede Phillips-kurve?',
-   a:'$$\\pi_t = \\pi_t^e + \\gamma(Y_t - \\bar{Y}) + s_t$$ Inflationen afhænger af forventninger $\\pi^e$, outputgabet $(Y_t - \\bar{Y})$ og udbudsstød $s_t$. $\\gamma$ måler prisfølsomheden — høj $\\gamma$ = stejl kurve = fleksible priser.',
-   hint:'Høj $\\gamma$ → store outputændringer giver stor inflationseffekt'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad er Tobin\'s $q$, og hvornår bør en virksomhed investere?',
-   options:['$q = $ Markedsværdi / Bogført egenkapital; investér når $q < 1$','$q = $ Markedsværdi / Genanskaffelsesværdi; investér når $q > 1$','$q = $ Dividende / Aktiekurs; investér altid når $q$ stiger','$q = $ Realrente / Nominel rente; investér når $q = 1$'],
-   correct:1,hint:'$q > 1$: markedet vurderer ny kapital højere end den koster'},
-
-  {topic:'makro2',type:'text',
-   q:'Hvad er UIP-betingelsen (Udækket Renteparitet)?',
-   a:'$$i = i^* + \\Delta e^e$$ Den indenlandske rente skal svare til den udenlandske rente plus den forventede valutakursændring. Fri kapitalstrøm eliminerer arbitragemuligheder — afkast udlignes på tværs af lande.',
-   hint:'Arbitrage tvinger forventet afkast til at udlignes'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad kendetegner langsigtsligevægt i AS-AD-modellen?',
-   options:['AD skærer SRAS; $\\pi > \\pi^*$','Output er over potentielt niveau $\\bar{y}$','AD skærer LRAS; faktisk output $= \\bar{y}$ og $\\pi = \\pi^e$','Centralbanken sætter $i = 0$'],
-   correct:2,hint:'På lang sigt bestemmer udbuddet – ikke efterspørgslen'},
-
-  {topic:'makro2',type:'text',
-   q:'Hvad er Fisher-ligningen og Fisher-effekten?',
-   a:'$$i \\approx r + \\pi^e$$ Nominel rente = realrente + forventet inflation. Fisher-effekten: på lang sigt fører 1 pp højere $\\pi$ til 1 pp højere $i$, mens realrenten $r$ forbliver uændret.',
-   hint:'Långivere kræver kompensation for inflation'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad er den sociale velfærdstabsfunktion $SL$?',
-   options:['$SL = (y - \\bar{y}) + \\kappa(\\pi - \\pi^*)$','$SL = (y - \\bar{y})^2 + \\kappa(\\pi - \\pi^*)^2$','$SL = \\kappa(y - \\bar{y})^2 - (\\pi - \\pi^*)^2$','$SL = (y - \\bar{y}) \\cdot \\kappa \\cdot (\\pi - \\pi^*)$'],
-   correct:1,hint:'Kvadreret: store afvigelser er uforholdsmæssigt skadelige'},
-
-  {topic:'makro2',type:'text',
-   q:'Hvad er Ricardiansk Ækvivalens, og hvornår bryder den ned?',
-   a:'En lånefinansieret skattelettelse ændrer ikke privatforbruget — rationelle husholdninger sparer op til fremtidige skatter (internaliserer statens budgetbetingelse). Bryder ned ved: 1) kreditbegrænsninger, 2) kortsynethed, 3) forvridende skatter.',
-   hint:'Rationelle agenter internaliserer statens intertemporale budgetbetingelse'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad er Lucas\' resultat vedr. velfærdstab ved konjunkturudsving?',
-   options:['Tabet svarer til ca. 5% af forbruget','Tabet er enormt og begrunder aktiv stabiliseringspolitik','Tabet er ekstremt lille – ca. 0,05% af forbruget','Tabet afhænger af $\\kappa$ i velfærdsfunktionen'],
-   correct:2,hint:'Kritiseret: repræsentativ husholdning skjuler fordelingseffekter'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad er den finanspolitiske multiplikator i en åben økonomi med skat?',
-   options:['$\\dfrac{1}{1 - mpc}$','$\\dfrac{1}{1 - mpc(1-t) + m}$','$\\dfrac{mpc}{1 - mpc}$','$\\dfrac{1}{mpc + t}$'],
-   correct:1,hint:'"Lækager": skattesats $t$ og importtilbøjelighed $m$ sænker multiplikatoren'},
-
-  {topic:'makro2',type:'text',
-   q:'Hvad er likviditetsfælden (Zero Lower Bound)?',
-   a:'Når $i = 0$ kan centralbanken ikke sænke renten yderligere med konventionel pengepolitik. Falder $\\pi$, stiger realrenten $r = i - \\pi$ automatisk og reducerer efterspørgslen — AD-kurven kan ændre hældning til positivt fortegn.',
-   hint:'$i \\geq 0$ → pengepolitik mister sin konventionelle kraft'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad sker der med output og inflation ved et positivt efterspørgselsstød på kort sigt?',
-   options:['Output stiger, inflation falder','Begge falder','AD skifter venstre; output og inflation falder','AD skifter højre; output og inflation stiger'],
-   correct:3,hint:'Stød → AD rykker → bevægelse langs SRAS'},
-
-  {topic:'makro2',type:'text',
-   q:'Hvad er hysteresis på arbejdsmarkedet?',
-   a:'Midlertidige negative stød får permanent effekt på den strukturelle ledighed $\\bar{u}$. Ledige mister færdigheder og arbejdsmarkedstilknytning ("scarring"), så NAIRU stiger varigt — selvom det konjunkturelle stød er overstået.',
-   hint:'Midlertidigt stød → permanent strukturel skade'},
-
-  {topic:'makro2',type:'mc',
-   q:'Hvad er shoe-leather costs?',
-   options:['Omkostninger ved at printe nye prislister ("menu costs")','Tid og besvær ved konstant at minimere kontantbeholdninger når $\\pi$ udhuler købekraften','Tab ved at holde obligationer i perioder med stigende rente','Effektivitetstab fra progressive skatter'],
-   correct:1,hint:'Høj $\\pi$ → folk holder mindre kontant → kostbar likviditetsstyring'},
-
-  // ── MIKRO II ──────────────────────────────────────────
-  {topic:'mikro2',type:'text',
-   q:'Hvad er Marginal Factor Cost (MFC) for en monopsonist?',
-   a:'$$MFC(x) = w_s(x) + w_s\'(x) \\cdot x$$ Første led: løn til den marginale arbejder. Andet led: lønstigningen der nu skal betales til alle eksisterende arbejdere. Derfor $MFC > w_s$ — monopsonisten internaliserer løneffekten.',
-   hint:'Ansæt én mere → hæver lønnen for alle'},
-
-  {topic:'mikro2',type:'mc',
-   q:'Hvad er profitmaksimeringsvilkåret for en monopsonist?',
-   options:['$MP(x) = w_s(x)$ — marginalprodukt lig markedsløn','$MP(x) = MFC(x) = w_s(x) + w_s\'(x)x$','$MR(x) = w_s(x)$','$MP(x) = 0$'],
-   correct:1,hint:'Monopsonisten ansætter færre end det socialt effektive niveau'},
-
-  {topic:'mikro2',type:'text',
-   q:'Hvad er principal-agent problemet?',
-   a:'Principalen kan ikke observere agentens indsats (skjult handling — moral hazard). Agenten kan agere i egeninteresse. Løsning: incitamentskontrakt der binder aflønning til observerbare resultater, under deltagelsesbetingelsen $u_{agent} \\geq \\bar{u}$.',
-   hint:'Informationsasymmetri → moral hazard → incitamentsdesign'},
-
-  {topic:'mikro2',type:'mc',
-   q:'Hvad er førstegrads prisdiskrimination?',
-   options:['Mængderabat baseret på købt volumen','Gruppering af forbrugere i segmenter med forskellig pris','Perfekt prisdiskrimination: alle betaler præcis deres betalingsvillighed — intet forbrugeroverskud','Selvsortering via produktbundter af forskellig kvalitet'],
-   correct:2,hint:'Kræver fuld information om alle forbrugeres betalingsvillighed'},
-
-  {topic:'mikro2',type:'text',
-   q:'Hvad er andengrads prisdiskrimination og selvsorteringsproblemet?',
-   a:'Virksomheden tilbyder produktbundter (f.eks. iPhone/iPhone Pro) — forbrugere sorterer sig selv efter betalingsvillighed. Problemet: er den billige pakke for god, vælger "rige" forbrugere den frem for den dyre, og profitten falder.',
-   hint:'Ufuldstændig information → screening via menudesign'},
-
-  {topic:'mikro2',type:'mc',
-   q:'Hvad kræver tredjegrads prisdiskrimination?',
-   options:['Fuld information om alle forbrugeres præferencer','Markedsmagt ($P > MC$), evne til at opdele forbrugere i grupper, og ingen arbitrage','Kun at virksomheden er et monopol','At produktet er et offentligt gode'],
-   correct:1,hint:'Biografer, fly og studierabatter er klassiske eksempler'},
-
-  {topic:'mikro2',type:'text',
-   q:'Hvad er det samfundsmæssigt optimale output under monopol, og hvad er dødvægtstabet?',
-   a:'Socialt optimum: $P = MC$. Monopolisten sætter $MR = MC$, men $MR < P$, så $P > MC$ i ligevægt. Dødvægtstabet er trianglen af urealiserede gevinster fra enheder hvor $P > MC$ men som ikke produceres.',
-   hint:'Monopolisten begrænser output for at hæve prisen'},
-
-  {topic:'mikro2',type:'mc',
-   q:'Hvad er en deltagelsesbetingelse (Participation Constraint)?',
-   options:['Agentens indsats skal overstige et minimum','Principalen maksimerer profit uden hensyn til agenten','Agentens nytte $u_{agent} \\geq \\bar{u}$: kontrakten skal matche reservationsnytten','Agenten skal modtage markedslønnen'],
-   correct:2,hint:'Uden opfyldt PC afviser agenten kontrakten'},
-
-  {topic:'mikro2',type:'mc',
-   q:'Hvad er det kompetitive beskæftigelsesniveau på et arbejdsmarked?',
-   options:['$MP(x) = MFC(x)$','$MP(x) = w_s(x)$ — marginalprodukt lig inverse udbudskurve','$MR = MC$','Udbudt = efterspurgt til en vilkårlig løn'],
-   correct:1,hint:'Under konkurrence: ingen monopsonimagt → løn = marginalprodukt'},
-
-  {topic:'mikro2',type:'text',
-   q:'Hvad gør et styksubsidie ($s$) ved monopolistens adfærd?',
-   a:'Monopolisten sætter nu $MR(x) + s = MC(x)$. Subsidiet øger effektiv marginalindtjening og skubber output mod det sociale optimum. Et korrekt kalibreret subsidie eliminerer dødvægtstabet fuldstændigt.',
-   hint:'Subsidie korrigerer for markedssvigt: $P = MC$ opnås ved $s = P - MC$'},
-
-  // ── ØKONOMETRI I ──────────────────────────────────────
-  {topic:'okonometri',type:'text',
-   q:'Hvad er Gauss-Markov teoremet?',
-   a:'Under MLR.1–MLR.5 er OLS-estimatoren <strong>BLUE</strong>: Best Linear Unbiased Estimator — den har den mindste varians blandt alle lineære, middelrette estimatorer. MLR.6 (normalitet) er ikke nødvendig for BLUE, men kræves for præcis inferens i små stikprøver.',
-   hint:'BLUE: MLR.1-5. MVUE (Classical LM): MLR.1-6'},
-
-  {topic:'okonometri',type:'mc',
-   q:'Hvad betyder det at $\\hat{\\beta}$ er middelret (unbiased)?',
-   options:['$\\hat{\\beta}$ nærmer sig $\\beta$ når $n \\to \\infty$','$E(\\hat{\\beta}) = \\beta$: estimatoren rammer den sande parameter i gennemsnit','$\\hat{\\beta}$ har den mindste varians','$\\hat{\\beta}$ er ukorreleret med fejlleddet $u$'],
-   correct:1,hint:'Middelrethed ≠ konsistens — gælder for endelig $n$'},
-
-  {topic:'okonometri',type:'text',
-   q:'Hvad er konsekvensen af heteroskedasticitet for OLS?',
-   a:'OLS-estimatoren er stadig middelret (MLR.4 er intakt), men standardfejlene er ugyldige fordi MLR.5 ($\\text{Var}(u|x) = \\sigma^2$) er brudt. $t$-tests og $F$-tests holder ikke. Løsning: robuste (Huber-White) standardfejl.',
-   hint:'Hetero bryder MLR.5 men ikke MLR.4'},
-
-  {topic:'okonometri',type:'mc',
-   q:'Hvad tester en $F$-test i OLS-regression?',
-   options:['Om en enkelt koefficient $\\beta_j = 0$','Om modellen er heteroskedastisk','Om en gruppe parametre samlet er lig nul (joint significance)','Om fejlleddet er normalfordelt'],
-   correct:2,hint:'$F = \\frac{(SSR_r - SSR_{ur})/q}{SSR_{ur}/(n-k-1)}$'},
-
-  {topic:'okonometri',type:'text',
-   q:'Hvad er Instrumental Variables (IV)?',
-   a:'IV bruges når en forklarende variabel er endogen — $\\text{Cov}(x, u) \\neq 0$. Et gyldigt instrument $Z$ skal opfylde: 1) <em>Relevans</em>: $\\text{Cov}(Z, x) \\neq 0$, og 2) <em>Eksogenitet</em>: $\\text{Cov}(Z, u) = 0$.',
-   hint:'Eksogenitetskravet kan typisk ikke testes statistisk'},
-
-  {topic:'okonometri',type:'mc',
-   q:'Hvad er "attenuation bias" fra klassisk målefejl i $x$?',
-   options:['$\\hat{\\beta}$ trækkes mod $+\\infty$','$\\hat{\\beta}$ trækkes mod $0$ — effekten undervurderes systematisk','Standardfejlen eksploderer','$R^2$ falder til nul'],
-   correct:1,hint:'Støj i $x$ "fortynder" signalet — IV kan korrigere for det'},
-
-  {topic:'okonometri',type:'text',
-   q:'Hvad er Difference-in-Differences (DiD)?',
-   a:'DiD estimerer kausaleffekten ved at sammenligne ændringen over tid for behandlings- og kontrolgruppe: $$\\hat{\\delta} = (\\bar{y}_{B,\\text{efter}} - \\bar{y}_{B,\\text{før}}) - (\\bar{y}_{K,\\text{efter}} - \\bar{y}_{K,\\text{før}})$$ Kræver antagelsen om <em>parallelle trends</em>.',
-   hint:'Paralleltrend: uden tiltag ville de to grupper have fulgt samme trend'},
-
-  {topic:'okonometri',type:'mc',
-   q:'Hvad er Fixed Effects-estimation ved paneldata?',
-   options:['Man antager at individeffekter $a_i$ er ukorrelerede med $x$','Man fjerner tids-konstant uobserveret heterogenitet $a_i$ via within-transformation','Man pooler alle observationer og ignorerer individspecifikke effekter','Man bruger GLS til at korrigere for autokorrelation'],
-   correct:1,hint:'Within: trækker individgennemsnit fra — eliminerer $a_i$'},
-
-  {topic:'okonometri',type:'mc',
-   q:'Hvad er MLR.4, og hvad sker der hvis den brydes?',
-   options:['$u \\sim N(0,\\sigma^2)$; brud giver upræcise $t$-tests','$E(u|x_1,...,x_k) = 0$; brud gør $\\hat{\\beta}$ ikke middelret','$\\text{Var}(u|x) = \\sigma^2$; brud giver ugyldige standardfejl','Ingen multikollinearitet; brud gør beregning umulig'],
-   correct:1,hint:'MLR.4 er kernen i $\\hat{\\beta}$\'s middelrethed'},
-
-  {topic:'okonometri',type:'text',
-   q:'Hvad er en dummy-variabel og hvordan fortolkes koefficienten?',
-   a:'En dummy antager 0 eller 1 for at indikere en kategori. I modellen $$\\text{løn} = \\beta_0 + \\delta_0 \\cdot \\text{kvinde} + \\beta_1 \\cdot \\text{udd} + u$$ er $\\delta_0$ den gennemsnitlige lønforskel ved samme uddannelsesniveau — et skift i interceptet.',
-   hint:'Koefficienten angiver skiftet ift. referencegruppen'},
-
-  {topic:'okonometri',type:'mc',
-   q:'Hvad er problemet med Linear Probability Model (LPM)?',
-   options:['Koefficienter kan ikke fortolkes som marginaleffekter','Modellen kan ikke estimeres med OLS','Forudsagte sandsynligheder kan ligge udenfor $[0, 1]$','Modellen kræver normalfordelte fejlled'],
-   correct:2,hint:'Alternativ: logit eller probit sikrer $\\hat{P} \\in [0,1]$'},
-
-  {topic:'okonometri',type:'text',
-   q:'Hvad er justeret $R^2$, og hvornår er det nyttigt?',
-   a:'$$\\bar{R}^2 = 1 - \\frac{SSR/(n-k-1)}{SST/(n-1)}$$ Stiger ikke nødvendigvis ved tilføjelse af variable — straffer for ekstra parametre der ikke bidrager. Nyttigt til modelsammenligning med forskelligt antal variable.',
-   hint:'Alm. $R^2$ stiger altid ved tilføjelse af variable'},
-
-  // ── VIDENSKABSTEORI ───────────────────────────────────
-  {topic:'videnskab',type:'text',
-   q:'Hvad er verificeringsprincippet, og hvorfor er det selvmodsigende?',
-   a:'Et udsagn har kun videnskabelig mening hvis det kan efterprøves empirisk. Det er selvmodsigende fordi selve princippet ikke kan verificeres empirisk — det dømmer sig selv som meningsløst.',
-   hint:'Logisk positivisme — Wienkredsen'},
-
-  {topic:'videnskab',type:'mc',
-   q:'Hvad går Duhem-Quine problemet ud på?',
-   options:['Man kan kun falsificere teorier, aldrig verificere dem','Man tester aldrig én hypotese isoleret — altid et bundt af teorier og hjælpeantagelser','Induktion er logisk ugyldig fordi fremtiden ikke ligner fortiden','Normativ og positiv økonomi kan ikke adskilles'],
-   correct:1,hint:'Fejler testen, ved man ikke hvad i bundtet der er galt'},
-
-  {topic:'videnskab',type:'text',
-   q:'Hvad er Poppers demarkationskriterium og asymmetri?',
-   a:'<em>Demarkation</em>: videnskab adskilles fra ikke-videnskab ved falsificerbarhed. <em>Asymmetri</em>: ingen mængde observationer verificerer endeligt en teori, men én modstridende observation er nok til at falsificere den logisk.',
-   hint:'"Alle svaner er hvide" — én sort modbeviser det'},
-
-  {topic:'videnskab',type:'mc',
-   q:'Hvad illustrerer Russells høne?',
-   options:['At induktion kan begrunde universelle naturlove','Faren ved induktion: fortidige mønstre giver ingen logisk garanti for fremtiden','At falsificerbarhed er umulig i praksis','At normative udsagn kan testes empirisk'],
-   correct:1,hint:'Hønen fodres hver dag — helt indtil slagtedagen'},
-
-  {topic:'videnskab',type:'text',
-   q:'Hvad er Friedmans "as-if" metodologi (instrumentalisme)?',
-   a:'Antagelsernes realisme er irrelevant. Det afgørende er om modellen forudsiger præcist nok. Man agerer <em>som om</em> antagelserne er sande hvis resultaterne holder. Eksempel: faldformlen $s = \\frac{1}{2}gt^2$ antager vakuum men virker "godt nok" i praksis.',
-   hint:'Kontrast til realisme: kun forudsigelseskraft tæller'},
-
-  {topic:'videnskab',type:'mc',
-   q:'Hvad er Lucas-kritikken?',
-   options:['OLS er inkonsistent ved endogene variable','Makromodeller baseret på historiske mønstre fejler når politikken ændres — agenter ændrer forventninger og adfærd','Inflationsmål er normative og ikke videnskabelige','Kausalitet kræver randomiserede forsøg'],
-   correct:1,hint:'Strukturelle parametre er ikke policy-invariante'},
-
-  {topic:'videnskab',type:'text',
-   q:'Hvad er Revealed Preference (Samuelson)?',
-   a:'Da vi ikke kan måle indre nytte direkte (positivistisk kritik af kardinal nytte), observerer vi i stedet faktiske valg. Præferencer "afsløres" gennem observerbar adfærd — uden at postulere en nytteskala.',
-   hint:'Valg frem for introspektive nyttebegreber'},
-
-  {topic:'videnskab',type:'mc',
-   q:'Hvad er forskellen på positiv og normativ økonomi?',
-   options:['Positiv beskriver fremtiden; normativ beskriver fortiden','Positiv siger hvordan verden <em>er</em> (fakta); normativ siger hvordan den <em>bør</em> være (værdier)','Positiv er falsificerbar; normativ er verifierbar','Positiv bruger matematik; normativ bruger filosofi'],
-   correct:1,hint:'"Skatten bør sænkes" er normativt; "skatten er 22%" er positivt'},
-
-  {topic:'videnskab',type:'text',
-   q:'Hvad er korroboration hos Popper?',
-   a:'En teori er korroboreret hvis den har overlevet gentagne og strenge forsøg på falsifikation. Det betyder ikke at den er "sand" — blot at den har vist sin styrke hidtil. Korroboration er gradsbestemt og midlertidig.',
-   hint:'Overlevet mange tests ≠ endeligt verificeret'},
-
-  {topic:'videnskab',type:'mc',
-   q:'Hvad er induktionsproblemet (Hume)?',
-   options:['At kausalitet ikke kan observeres direkte — kun korrelation','At vi ikke logisk kan begrunde at fortidige mønstre vil gentage sig i fremtiden','At teorier aldrig kan falsificeres pga. hjælpeantagelser','At normative og positive udsagn i praksis er identiske'],
-   correct:1,hint:'Solen er stået op hver dag — ingen logisk garanti for i morgen'},
-];
-
-// ── SVG GRAPHS ───────────────────────────────────────────
-const GRAPHS={
-
-  'ad-as-shock': `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:160px">
-    <defs><marker id="ah" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#555"/><\/marker><\/defs>
-    <line x1="28" y1="8" x2="28" y2="185" stroke="#444" stroke-width="1.2" marker-end="url(#ah)"/>
-    <line x1="20" y1="177" x2="272" y2="177" stroke="#444" stroke-width="1.2" marker-end="url(#ah)"/>
-    <text x="12" y="7" fill="#666" font-size="9" font-family="DM Sans,sans-serif">π<\/text>
-    <text x="266" y="188" fill="#666" font-size="9" font-family="DM Sans,sans-serif">y<\/text>
-    <line x1="155" y1="15" x2="155" y2="172" stroke="#c8f55a" stroke-width="1.8"/>
-    <text x="158" y="13" fill="#c8f55a" font-size="8" font-family="DM Sans,sans-serif">LRAS<\/text>
-    <line x1="50" y1="172" x2="240" y2="60" stroke="#f5a623" stroke-width="1.6"/>
-    <text x="220" y="57" fill="#f5a623" font-size="8" font-family="DM Sans,sans-serif">SRAS<\/text>
-    <line x1="45" y1="55" x2="230" y2="168" stroke="#7b9fff" stroke-width="1.6"/>
-    <text x="210" y="166" fill="#7b9fff" font-size="8" font-family="DM Sans,sans-serif">AD₁<\/text>
-    <line x1="20" y1="55" x2="200" y2="168" stroke="#7b9fff" stroke-width="1.6" stroke-dasharray="5,3"/>
-    <text x="180" y="166" fill="#7b9fff" font-size="8" font-family="DM Sans,sans-serif">AD₂<\/text>
-    <circle cx="155" cy="112" r="4" fill="#c8f55a"/>
-    <text x="161" y="111" fill="#c8f55a" font-size="9" font-family="DM Serif Display,serif" font-style="italic">A<\/text>
-    <circle cx="129" cy="124" r="4" fill="#ff6b6b"/>
-    <text x="117" y="123" fill="#ff6b6b" font-size="9" font-family="DM Serif Display,serif" font-style="italic">B<\/text>
-    <path d="M148,116 L136,121" stroke="#888" stroke-width="1" marker-end="url(#ah)"/>
-  <\/svg>`,
-
-  'phillips': `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:160px">
-    <defs><marker id="ah2" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#555"/><\/marker><\/defs>
-    <line x1="28" y1="8" x2="28" y2="185" stroke="#444" stroke-width="1.2" marker-end="url(#ah2)"/>
-    <line x1="20" y1="177" x2="272" y2="177" stroke="#444" stroke-width="1.2" marker-end="url(#ah2)"/>
-    <text x="6" y="7" fill="#666" font-size="9" font-family="DM Sans,sans-serif">π<\/text>
-    <text x="256" y="188" fill="#666" font-size="9" font-family="DM Sans,sans-serif">u<\/text>
-    <line x1="155" y1="15" x2="155" y2="172" stroke="#c8f55a" stroke-width="1.8"/>
-    <text x="158" y="13" fill="#c8f55a" font-size="8" font-family="DM Sans,sans-serif">LR Phillips<\/text>
-    <path d="M50,55 Q110,90 240,160" stroke="#f5a623" stroke-width="1.6" fill="none"/>
-    <text x="200" y="148" fill="#f5a623" font-size="8" font-family="DM Sans,sans-serif">SRPC₁<\/text>
-    <path d="M50,90 Q110,125 240,177" stroke="#f5a623" stroke-width="1.6" fill="none" stroke-dasharray="5,3"/>
-    <text x="200" y="172" fill="#f5a623" font-size="8" font-family="DM Sans,sans-serif">SRPC₂<\/text>
-    <text x="140" y="188" fill="#888" font-size="8" font-family="DM Sans,sans-serif">u*<\/text>
-    <line x1="155" y1="172" x2="155" y2="177" stroke="#888" stroke-width="1"/>
-    <circle cx="155" cy="95" r="3.5" fill="#c8f55a"/>
-    <circle cx="155" cy="130" r="3.5" fill="#ff6b6b"/>
-    <text x="160" y="94" fill="#c8f55a" font-size="8" font-family="DM Serif Display,serif" font-style="italic">A<\/text>
-    <text x="160" y="129" fill="#ff6b6b" font-size="8" font-family="DM Serif Display,serif" font-style="italic">B<\/text>
-    <path d="M155,99 L155,126" stroke="#888" stroke-width="1" marker-end="url(#ah2)" stroke-dasharray="2,2"/>
-  <\/svg>`,
-
-  'is-curve': `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:160px">
-    <defs><marker id="ah3" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#555"/><\/marker><\/defs>
-    <line x1="28" y1="8" x2="28" y2="185" stroke="#444" stroke-width="1.2" marker-end="url(#ah3)"/>
-    <line x1="20" y1="177" x2="272" y2="177" stroke="#444" stroke-width="1.2" marker-end="url(#ah3)"/>
-    <text x="12" y="7" fill="#666" font-size="9" font-family="DM Sans,sans-serif">r<\/text>
-    <text x="266" y="188" fill="#666" font-size="9" font-family="DM Sans,sans-serif">y<\/text>
-    <line x1="45" y1="45" x2="240" y2="165" stroke="#7b9fff" stroke-width="1.8" transform="rotate(0)"/>
-    <text x="220" y="160" fill="#7b9fff" font-size="9" font-family="DM Sans,sans-serif">IS₁<\/text>
-    <line x1="75" y1="45" x2="265" y2="165" stroke="#7b9fff" stroke-width="1.8" stroke-dasharray="5,3"/>
-    <text x="248" y="160" fill="#7b9fff" font-size="9" font-family="DM Sans,sans-serif">IS₂<\/text>
-    <line x1="28" y1="100" x2="260" y2="100" stroke="#888" stroke-width="1" stroke-dasharray="3,3"/>
-    <text x="30" y="96" fill="#888" font-size="8" font-family="DM Mono,monospace">r₀<\/text>
-    <circle cx="138" cy="100" r="3.5" fill="#c8f55a"/>
-    <circle cx="168" cy="100" r="3.5" fill="#f5a623"/>
-    <text x="132" y="114" fill="#888" font-size="8" font-family="DM Mono,monospace">y₁<\/text>
-    <text x="162" y="114" fill="#888" font-size="8" font-family="DM Mono,monospace">y₂<\/text>
-    <line x1="138" y1="100" x2="138" y2="172" stroke="#888" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="168" y1="100" x2="168" y2="172" stroke="#888" stroke-width="1" stroke-dasharray="2,2"/>
-    <path d="M143,100 L163,100" stroke="#f5a623" stroke-width="1.2" marker-end="url(#ah3)"/>
-  <\/svg>`,
-
-  'tobins-q': `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:160px">
-    <defs><marker id="ah4" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#555"/><\/marker><\/defs>
-    <line x1="28" y1="8" x2="28" y2="185" stroke="#444" stroke-width="1.2" marker-end="url(#ah4)"/>
-    <line x1="20" y1="177" x2="272" y2="177" stroke="#444" stroke-width="1.2" marker-end="url(#ah4)"/>
-    <text x="12" y="7" fill="#666" font-size="9" font-family="DM Sans,sans-serif">V<\/text>
-    <text x="266" y="188" fill="#666" font-size="9" font-family="DM Sans,sans-serif">K<\/text>
-    <line x1="28" y1="177" x2="240" y2="30" stroke="#c8f55a" stroke-width="1.8"/>
-    <text x="220" y="27" fill="#c8f55a" font-size="9" font-family="DM Sans,sans-serif">Markedsværdi V<\/text>
-    <line x1="28" y1="177" x2="240" y2="80" stroke="#f5a623" stroke-width="1.8"/>
-    <text x="220" y="77" fill="#f5a623" font-size="9" font-family="DM Sans,sans-serif">Genanskaffelse pK<\/text>
-    <line x1="28" y1="100" x2="100" y2="100" stroke="#888" stroke-width="1" stroke-dasharray="2,2"/>
-    <circle cx="100" cy="100" r="3.5" fill="#ff6b6b"/>
-    <text x="85" y="96" fill="#ff6b6b" font-size="7" font-family="DM Sans,sans-serif">q&lt;1<\/text>
-    <text x="79" y="107" fill="#ff6b6b" font-size="7" font-family="DM Sans,sans-serif">stop<\/text>
-    <circle cx="168" cy="72" r="3.5" fill="#c8f55a"/>
-    <text x="172" y="71" fill="#c8f55a" font-size="7" font-family="DM Sans,sans-serif">q&gt;1<\/text>
-    <text x="172" y="80" fill="#c8f55a" font-size="7" font-family="DM Sans,sans-serif">investér!<\/text>
-    <line x1="28" y1="128" x2="272" y2="128" stroke="#7b9fff" stroke-width="1" stroke-dasharray="3,2"/>
-    <text x="30" y="124" fill="#7b9fff" font-size="7" font-family="DM Sans,sans-serif">q=1 (ligevægt)<\/text>
-  <\/svg>`,
-
-  'zlb': `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:160px">
-    <defs><marker id="ah5" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#555"/><\/marker><\/defs>
-    <line x1="28" y1="8" x2="28" y2="185" stroke="#444" stroke-width="1.2" marker-end="url(#ah5)"/>
-    <line x1="20" y1="177" x2="272" y2="177" stroke="#444" stroke-width="1.2" marker-end="url(#ah5)"/>
-    <text x="12" y="7" fill="#666" font-size="9" font-family="DM Sans,sans-serif">π<\/text>
-    <text x="266" y="188" fill="#666" font-size="9" font-family="DM Sans,sans-serif">y<\/text>
-    <line x1="28" y1="140" x2="272" y2="140" stroke="#ff6b6b" stroke-width="1.2" stroke-dasharray="4,3"/>
-    <text x="30" y="136" fill="#ff6b6b" font-size="8" font-family="DM Sans,sans-serif">i = 0 (ZLB)<\/text>
-    <line x1="45" y1="50" x2="230" y2="165" stroke="#7b9fff" stroke-width="1.6"/>
-    <text x="210" y="162" fill="#7b9fff" font-size="8" font-family="DM Sans,sans-serif">AD (normal)<\/text>
-    <path d="M60,140 Q100,148 140,155 Q180,162 230,168" stroke="#ff6b6b" stroke-width="1.6" fill="none"/>
-    <text x="195" y="182" fill="#ff6b6b" font-size="8" font-family="DM Sans,sans-serif">AD (ZLB)<\/text>
-    <circle cx="130" cy="107" r="3.5" fill="#c8f55a"/>
-    <text x="135" y="106" fill="#c8f55a" font-size="8" font-family="DM Serif Display,serif" font-style="italic">A<\/text>
-    <circle cx="88" cy="148" r="3.5" fill="#ff6b6b"/>
-    <text x="93" y="147" fill="#ff6b6b" font-size="8" font-family="DM Serif Display,serif" font-style="italic">B<\/text>
-    <path d="M126,110 L95,144" stroke="#888" stroke-width="1" marker-end="url(#ah5)" stroke-dasharray="2,2"/>
-  <\/svg>`,
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  startup: { typeset: false }
 };
-
-// ── STATE ────────────────────────────────────────────────
-let deck=[],idx=0,flipped=false,mcAnswered=false;
-let sessionGot=0,sessionAlmost=0,sessionHard=0;
-let totalXP=parseInt(localStorage.getItem('eq_xp')||'0');
-let totalCards=parseInt(localStorage.getItem('eq_cards')||'0');
-let totalGot=parseInt(localStorage.getItem('eq_got')||'0');
-let streak=parseInt(localStorage.getItem('eq_streak')||'0');
-let currentTopic='all';
-
-function updateHomeStats(){
-  document.getElementById('total-xp').textContent=totalXP;
-  document.getElementById('cards-done').textContent=totalCards;
-  const m=totalCards>0?Math.round((totalGot/totalCards)*100):0;
-  document.getElementById('mastery-pct').textContent=m+'%';
-  document.getElementById('streak-num').textContent=streak;
-  document.getElementById('xp-badge').textContent=totalXP+' XP';
-  ['makro2','mikro2','okonometri','videnskab'].forEach(t=>{
-    document.getElementById('count-'+t).textContent=CARDS.filter(c=>c.topic===t).length+' kort';
-  });
-  document.getElementById('count-all').textContent=CARDS.length+' kort';
-}
-
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function goHome(){updateHomeStats();showScreen('home');}
-
-function typeset(el){
-  if(window.MathJax&&MathJax.typesetPromise){
-    MathJax.typesetPromise([el]).catch(()=>{});
-  }
-}
-
-function startStudy(topic){
-  currentTopic=topic;idx=0;flipped=false;mcAnswered=false;
-  sessionGot=0;sessionAlmost=0;sessionHard=0;
-  const filtered=topic==='all'?CARDS:CARDS.filter(c=>c.topic===topic);
-  deck=shuffle(filtered).slice(0,12);
-  showScreen('study');renderCard();
-}
-
-const LABELS={makro2:'Makro II',mikro2:'Mikro II',okonometri:'Økonometri I',videnskab:'Videnskabsteori'};
-
-function renderCard(){
-  if(idx>=deck.length){showDone();return;}
-  const c=deck[idx];flipped=false;mcAnswered=false;
-  document.getElementById('card-inner').classList.remove('flipped');
-  document.getElementById('study-badge').textContent=LABELS[c.topic]||c.topic;
-
-  // Question (front) — graph cards show SVG above question
-  const qEl=document.getElementById('card-q');
-  const frontFace=document.getElementById('card-front');
-  const existingGraph=frontFace.querySelector('.card-graph');
-  if(existingGraph)existingGraph.remove();
-
-  if(c.type==='graph'&&GRAPHS[c.graph]){
-    const gWrap=document.createElement('div');
-    gWrap.className='card-graph';
-    gWrap.style.cssText='width:100%;margin-bottom:10px;flex-shrink:0';
-    gWrap.innerHTML=GRAPHS[c.graph];
-    frontFace.insertBefore(gWrap,qEl);
-    qEl.style.fontSize='14px';
-    qEl.style.fontStyle='normal';
-    qEl.style.fontFamily='var(--sans)';
-  } else {
-    qEl.style.fontSize='';
-    qEl.style.fontStyle='';
-    qEl.style.fontFamily='';
-  }
-  qEl.innerHTML=c.q;
-  typeset(qEl);
-
-  // Answer (back) — graph cards also show graph on back for reference
-  const backEl=document.getElementById('card-back-content');
-  if(c.type==='graph'&&GRAPHS[c.graph]){
-    backEl.innerHTML='<div class="card-graph" style="width:100%;margin-bottom:10px;flex-shrink:0">'+GRAPHS[c.graph]+'</div><div class="card-a">'+c.a+'</div>';
-  } else {
-    backEl.innerHTML='<div class="card-a">'+c.a+'</div>';
-  }
-  typeset(backEl);
-
-  const hintEl=document.getElementById('card-hint-el');
-  hintEl.innerHTML='💡 '+c.hint;
-  typeset(hintEl);
-
-  const pct=Math.round((idx/deck.length)*100);
-  document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('card-counter').textContent=(idx+1)+'/'+deck.length;
-
-  const isMC=c.type==='mc';
-  document.getElementById('mc-options').classList.toggle('hidden',!isMC);
-  document.getElementById('mc-next').classList.add('hidden');
-  document.getElementById('tap-cue').classList.toggle('hidden',isMC);
-  document.getElementById('rating-area').classList.toggle('hidden',isMC);
-  document.getElementById('rating-label').classList.add('hidden');
-  document.getElementById('rating-btns').classList.add('hidden');
-  if(isMC)renderMCOptions(c);
-}
-
-function handleFrontClick(){if(deck[idx].type==='mc')return;flipCard();}
-
-function flipCard(){
-  if(flipped)return;flipped=true;
-  document.getElementById('card-inner').classList.add('flipped');
-  document.getElementById('tap-cue').classList.add('hidden');
-  document.getElementById('rating-label').classList.remove('hidden');
-  document.getElementById('rating-btns').classList.remove('hidden');
-}
-
-function renderMCOptions(c){
-  const container=document.getElementById('mc-options');
-  container.innerHTML='';
-  shuffle(c.options.map((text,i)=>({text,i}))).forEach(({text,i})=>{
-    const btn=document.createElement('button');
-    btn.className='mc-btn';btn.innerHTML=text;btn.dataset.idx=i;
-    btn.onclick=()=>handleMCAnswer(i,c.correct);
-    container.appendChild(btn);
-  });
-  typeset(container);
-}
-
-function handleMCAnswer(chosen,correct){
-  if(mcAnswered)return;mcAnswered=true;
-  document.querySelectorAll('.mc-btn').forEach(btn=>{
-    btn.disabled=true;
-    const i=parseInt(btn.dataset.idx);
-    if(i===correct)btn.classList.add('reveal-correct');
-    if(i===chosen&&chosen!==correct)btn.classList.add('wrong');
-    if(i===chosen&&chosen===correct)btn.classList.add('correct');
-  });
-  const xpGain=chosen===correct?10:2;
-  if(chosen===correct){sessionGot++;totalGot++;}else sessionHard++;
-  totalXP+=xpGain;totalCards++;
-  localStorage.setItem('eq_xp',totalXP);
-  localStorage.setItem('eq_cards',totalCards);
-  localStorage.setItem('eq_got',totalGot);
-  document.getElementById('mc-next').classList.remove('hidden');
-}
-
-function nextCard(){idx++;renderCard();}
-
-function rate(level){
-  let xp=0;
-  if(level==='easy'){xp=10;sessionGot++;totalGot++;}
-  else if(level==='medium'){xp=5;sessionAlmost++;}
-  else{xp=2;sessionHard++;}
-  totalXP+=xp;totalCards++;
-  localStorage.setItem('eq_xp',totalXP);
-  localStorage.setItem('eq_cards',totalCards);
-  localStorage.setItem('eq_got',totalGot);
-  idx++;renderCard();
-}
-
-function showDone(){
-  const total=sessionGot+sessionAlmost+sessionHard;
-  const pct=total>0?Math.round((sessionGot/total)*100):0;
-  document.getElementById('d-got').textContent=sessionGot;
-  document.getElementById('d-almost').textContent=sessionAlmost;
-  document.getElementById('d-hard').textContent=sessionHard;
-  document.getElementById('done-sub').textContent=
-    pct+'% mestring denne session. '+
-    (pct>=80?'Fremragende arbejde.':pct>=50?'Du er på rette vej.':'Bliv ved – det samler sig.');
-  streak++;localStorage.setItem('eq_streak',streak);
-  showScreen('done');
-}
-
-function restartSession(){startStudy(currentTopic);}
-updateHomeStats();
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script src="cards.js"></script>
+<script src="graphs.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
